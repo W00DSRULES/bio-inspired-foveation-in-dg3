@@ -190,7 +190,18 @@ DIFFICULTY_KEYS = (
     "fixation_entropy_norm",
     "consensus_area_75_pct",
 )
-PERF_KEYS = ("ig_bits", "nss", "auc", "ll_bits")
+PERF_KEYS = ("ig_bits", "nss", "auc", "ll_bits", "ll_uniform_bits")
+
+
+def _perf_value(row: dict, pk: str) -> float:
+    """One per-image metric. ``ll_bits`` is the raw log-density in bits; the thesis
+    defines log-likelihood against a uniform map (ch03 eq. ll), which adds
+    log2(H*W) of that image, so ``ll_uniform_bits`` is derived here rather than
+    stored — the JSON keeps the raw value it was written with."""
+    if pk == "ll_uniform_bits":
+        H, W = row["image_shape_hw"]
+        return float(row["dg3"]["ll_bits"] + np.log2(H * W))
+    return row["dg3"][pk]
 
 
 def correlations(rows: list[dict]) -> dict:
@@ -199,7 +210,7 @@ def correlations(rows: list[dict]) -> dict:
         out[dk] = {}
         for pk in PERF_KEYS:
             xs = [r["difficulty"][dk] for r in rows]
-            ys = [r["dg3"][pk] for r in rows]
+            ys = [_perf_value(r, pk) for r in rows]
             p, s, n = _pearson_spearman(xs, ys)
             out[dk][pk] = {"pearson": p, "spearman": s, "n": n}
     return out
@@ -216,8 +227,8 @@ def _scatter_grid(rows: list[dict], corr: dict, path: Path) -> None:
     plots = [
         ("fixation_entropy_norm", "ig_bits",
          "Fixation entropy (norm)", "IG over centerbias (bits/fix)"),
-        ("fixation_entropy_norm", "ll_bits",
-         "Fixation entropy (norm)", "LL (bits/fix)"),
+        ("fixation_entropy_norm", "ll_uniform_bits",
+         "Fixation entropy (norm)", "LL over uniform (bits/fix)"),
         ("fixation_entropy_norm", "nss",
          "Fixation entropy (norm)", "NSS"),
         ("fixation_entropy_norm", "auc",
@@ -225,15 +236,19 @@ def _scatter_grid(rows: list[dict], corr: dict, path: Path) -> None:
     ]
     for ax, (dk, pk, xlbl, ylbl) in zip(axes.ravel(), plots):
         xs = np.array([r["difficulty"][dk] for r in rows], dtype=float)
-        ys = np.array([r["dg3"][pk] for r in rows], dtype=float)
+        ys = np.array([_perf_value(r, pk) for r in rows], dtype=float)
         m = np.isfinite(xs) & np.isfinite(ys)
         xs, ys = xs[m], ys[m]
         ax.scatter(xs, ys, alpha=0.7, s=36, color="#1d6fb8", edgecolor="white")
         if len(xs) >= 2:
             coef = np.polyfit(xs, ys, 1)
-            xline = np.array([xs.min(), xs.max()])
-            ax.plot(xline, np.polyval(coef, xline), "-",
-                    color="#e63946", linewidth=1.4, alpha=0.85)
+            xline = np.linspace(xs.min(), xs.max(), 200)
+            yline = np.polyval(coef, xline)
+            if pk == "auc":
+                # AUC cannot exceed one.
+                keep = yline <= 1.0
+                xline, yline = xline[keep], yline[keep]
+            ax.plot(xline, yline, "-", color="#e63946", linewidth=1.4, alpha=0.85)
         c = corr[dk][pk]
         # Both coefficients go in the panel and the axis labels name the pair, so
         # the title does not repeat the x variable. Three decimals, the precision
@@ -607,9 +622,17 @@ def main() -> None:
     if args.refresh_scalars:
         run_refresh_scalars(args)
     elif args.replot:
-        d = json.loads((args.out / "diagnostic.json").read_text())
+        # The correlations block is recomputed from the rows so that the panel
+        # titles, diagnostic.json and diagnostic.md carry the same values; the
+        # rows themselves are not touched.
+        path = args.out / "diagnostic.json"
+        d = json.loads(path.read_text())
+        d["correlations"] = correlations(d["rows"])
+        path.write_text(json.dumps(d, indent=2))
+        (args.out / "diagnostic.md").write_text(
+            _render_markdown(d["meta"], d["rows"], d["correlations"]))
         _scatter_grid(d["rows"], d["correlations"], args.out / "scatter.png")
-        print(f"wrote {args.out/'scatter.png'} from {args.out/'diagnostic.json'}")
+        print(f"wrote {args.out/'scatter.png'} from {path}; correlations block refreshed")
     elif args.human_only:
         run_human_only(args)
     elif args.join is not None:

@@ -1111,7 +1111,7 @@ def fig_gp_strength_grid() -> None:
         for cpd in cpds:
             fov_img = foveation(cpd).foveate_shared_image(img, fx, fy, stack=stack)
             mean_abs[cpd].append(float((fov_img - img).abs().mean()))
-            panels.append((f"{cpd:g} cpd", fov_img))
+            panels.append((rf"$f_{{c0}} = {cpd:g}$", fov_img))
         # The box on the stimulus says which region the patches are; the
         # patches themselves carry no frame and no eccentricity label.
         for col, (title, t) in enumerate(panels, start=1):

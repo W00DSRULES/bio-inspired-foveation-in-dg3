@@ -387,7 +387,8 @@ def fig_training_curves() -> None:
     # ten at each decay), printed at the segment midpoints. The point at epoch e
     # is the validation after training epoch e, and epoch 5 already trains at the
     # decayed rate, so the base-rate segment ends at the epoch-4 point.
-    for x, rate in ((2.5, r"lr $3{\times}10^{-4}$"), (6.0, r"$3{\times}10^{-5}$")):
+    ax.axvline(4, color="0.35", lw=1.4, ls="--", zorder=1)
+    for x, rate in ((2.0, r"lr $3{\times}10^{-4}$"), (6.0, r"$3{\times}10^{-5}$")):
         ax.text(x, 0.995, rate, transform=ax.get_xaxis_transform(), ha="center",
                 va="top", fontsize=9, color="0.45",
                 bbox=dict(fc="white", ec="none", pad=1.2))
@@ -418,6 +419,7 @@ def fig_training_curves() -> None:
             ax.plot([0], [mean[0]], "o", ms=6, color=col, mec="white", mew=1.1, zorder=5)
     for e in fired:
         ax.axvline(e, color="0.75", lw=1.0, ls=":", zorder=1)
+    ax.axvline(4, color="0.35", lw=1.4, ls="--", zorder=1)
     ax.axvline(report_epoch(), color="#333333", lw=1.8, zorder=4)
     ax.axhline(0, color="#333333", lw=1.0, zorder=2)
     ax.set_xlabel("epoch")

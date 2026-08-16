@@ -10,10 +10,10 @@
 
 Pearson r — linear correlation. Spearman rho — rank correlation, robust to outliers. A negative r between *difficulty* and *performance* means the model does worse on harder images.
 
-| difficulty \ performance | ig_bits | nss | auc | ll_bits |
-|---|---|---|---|---|
-| **fixation_entropy_norm** | r = -0.52 (ρ = -0.53) | r = -0.81 (ρ = -0.80) | r = -0.79 (ρ = -0.80) | r = -0.86 (ρ = -0.84) |
-| **consensus_area_75_pct** | r = +0.47 (ρ = +0.50) | r = +0.38 (ρ = +0.50) | r = +0.55 (ρ = +0.58) | r = +0.54 (ρ = +0.61) |
+| difficulty \ performance | ig_bits | nss | auc | ll_bits | ll_uniform_bits |
+|---|---|---|---|---|---|
+| **fixation_entropy_norm** | r = -0.52 (ρ = -0.53) | r = -0.81 (ρ = -0.80) | r = -0.79 (ρ = -0.80) | r = -0.86 (ρ = -0.84) | r = -0.85 (ρ = -0.84) |
+| **consensus_area_75_pct** | r = +0.47 (ρ = +0.50) | r = +0.38 (ρ = +0.50) | r = +0.55 (ρ = +0.58) | r = +0.54 (ρ = +0.61) | r = +0.51 (ρ = +0.58) |
 
 ## Reading the table
 
