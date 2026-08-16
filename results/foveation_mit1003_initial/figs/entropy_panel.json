@@ -1,0 +1,22 @@
+{
+  "source": "results/per_image_diagnostic_initial_1003/diagnostic.json",
+  "dataset_variant": "initial",
+  "entropy_bins": 16,
+  "dataset_min": 0.33377638003103277,
+  "dataset_median": 0.625002464583504,
+  "dataset_max": 0.7639290480632897,
+  "stimuli": [
+    {
+      "stim": 793,
+      "h": 0.33377638003103277,
+      "pct": 0.0,
+      "label": "lowest in the dataset"
+    },
+    {
+      "stim": 121,
+      "h": 0.7639290480632897,
+      "pct": 99.90029910269193,
+      "label": "highest in the dataset"
+    }
+  ]
+}

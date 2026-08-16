@@ -1,0 +1,31 @@
+{
+  "stim_idx": 91,
+  "stim": "i132306037.jpeg",
+  "subject": 0,
+  "fixation_index": 3,
+  "fixation_px": [
+    702.7594936708861,
+    616.32
+  ],
+  "ppd": 35.0,
+  "foveal_cpd": [
+    40.0,
+    10.0
+  ],
+  "identity_radius_px": {
+    "40.0": 103.49999999999999,
+    "10.0": 0.0
+  },
+  "crop_xywh": [
+    240,
+    555,
+    240,
+    170
+  ],
+  "crop_eccentricity_deg": 9.81647149298928,
+  "image_shape": [
+    768,
+    1024
+  ],
+  "device": "mps"
+}

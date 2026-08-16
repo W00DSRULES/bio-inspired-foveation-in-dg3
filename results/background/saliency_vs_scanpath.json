@@ -1,0 +1,12 @@
+{
+  "stim_idx": 91,
+  "stim": "i132306037.jpeg",
+  "subject": 0,
+  "n_observers": 15,
+  "n_fixations_total": 107,
+  "image_shape": [
+    768,
+    1024
+  ],
+  "kde_sigma_frac": 0.035
+}

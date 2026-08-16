@@ -1,0 +1,25 @@
+{
+  "contrast": "fov_cpd40 vs normal",
+  "split": "test",
+  "n_fixations": 104171,
+  "mean_dig_bits": 0.003826506368511971,
+  "note": "Two standard errors, matching ch03 stats-plan. Fold pairing is not here: it collapses each fold to one number, and its standard error is test/table.json's, which ch04 quotes.",
+  "groupings": {
+    "image": {
+      "n_groups": 1003,
+      "se": 0.0013314298026220598,
+      "interval_2se": [
+        0.0011636467632678512,
+        0.00648936597375609
+      ]
+    },
+    "subject": {
+      "n_groups": 15,
+      "se": 0.001041314238690537,
+      "interval_2se": [
+        0.001743877891130897,
+        0.005909134845893045
+      ]
+    }
+  }
+}

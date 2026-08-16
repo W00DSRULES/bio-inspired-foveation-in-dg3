@@ -1,0 +1,58 @@
+{
+  "stims": [
+    62,
+    121
+  ],
+  "stim_labels": [
+    "i113911116.jpeg",
+    "i163823931.jpeg"
+  ],
+  "n_shown_per_stim": 5,
+  "observers_shown": [
+    [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  ],
+  "n_observers_total": [
+    15,
+    15
+  ],
+  "fixation_counts_shown": [
+    [
+      8,
+      9,
+      9,
+      9,
+      4
+    ],
+    [
+      7,
+      10,
+      8,
+      6,
+      9
+    ]
+  ],
+  "selection": "first n_show in subject order, not curated",
+  "fixation_entropy": {
+    "62": 0.6746,
+    "121": 0.7639
+  },
+  "dispersion_rank": {
+    "62": 191,
+    "121": 1
+  },
+  "n_stimuli_ranked": 1003,
+  "rank_note": "1 = most dispersed; see rank_by_dispersion()"
+}

@@ -1,0 +1,467 @@
+{
+  "source": "results/foveation_mit1003_initial/stratified/cpd*_val/per_fixation/",
+  "split": "val",
+  "bins": [
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      5,
+      5
+    ],
+    [
+      6,
+      6
+    ],
+    [
+      7,
+      7
+    ],
+    [
+      8,
+      8
+    ],
+    [
+      9,
+      100
+    ]
+  ],
+  "arms": {
+    "foveated@40": {
+      "cpd": 40,
+      "n_folds": 10,
+      "bins": [
+        {
+          "fix_index_lo": 1,
+          "fix_index_hi": 1,
+          "label": "1",
+          "n_fixations": 14916,
+          "mean_amplitude_px": 148.75368550026022,
+          "ig_normal_bits": 1.7971427808217566,
+          "d_ll_bits": {
+            "mean": 0.0051109707161469935,
+            "se": 0.0045609858383983655,
+            "t": 1.1205846492919085,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.002843942490651725
+        },
+        {
+          "fix_index_lo": 2,
+          "fix_index_hi": 2,
+          "label": "2",
+          "n_fixations": 14633,
+          "mean_amplitude_px": 173.79727586100606,
+          "ig_normal_bits": 1.7502134453818798,
+          "d_ll_bits": {
+            "mean": 0.008443434473734862,
+            "se": 0.0038434026990482604,
+            "t": 2.1968643764094002,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.00482423129362521
+        },
+        {
+          "fix_index_lo": 3,
+          "fix_index_hi": 3,
+          "label": "3",
+          "n_fixations": 14226,
+          "mean_amplitude_px": 192.58908134421705,
+          "ig_normal_bits": 1.5915413912248062,
+          "d_ll_bits": {
+            "mean": 0.0016965508383134167,
+            "se": 0.003818649223813885,
+            "t": 0.4442803564499655,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.0010659797148020122
+        },
+        {
+          "fix_index_lo": 4,
+          "fix_index_hi": 4,
+          "label": "4",
+          "n_fixations": 13605,
+          "mean_amplitude_px": 200.16513968452682,
+          "ig_normal_bits": 1.5481054167410262,
+          "d_ll_bits": {
+            "mean": 0.002223477159334343,
+            "se": 0.002719710397938453,
+            "t": 0.8175418827753661,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.0014362569469042147
+        },
+        {
+          "fix_index_lo": 5,
+          "fix_index_hi": 5,
+          "label": "5",
+          "n_fixations": 12644,
+          "mean_amplitude_px": 205.13148707551278,
+          "ig_normal_bits": 1.5292431259417616,
+          "d_ll_bits": {
+            "mean": 0.004773172159995581,
+            "se": 0.0036078410809011023,
+            "t": 1.3229995592830888,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.0031212644209573245
+        },
+        {
+          "fix_index_lo": 6,
+          "fix_index_hi": 6,
+          "label": "6",
+          "n_fixations": 11215,
+          "mean_amplitude_px": 207.06760963070147,
+          "ig_normal_bits": 1.4351468625489772,
+          "d_ll_bits": {
+            "mean": 0.007935536124793256,
+            "se": 0.0027459237551020602,
+            "t": 2.8899331636752996,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.005529424431656339
+        },
+        {
+          "fix_index_lo": 7,
+          "fix_index_hi": 7,
+          "label": "7",
+          "n_fixations": 9240,
+          "mean_amplitude_px": 208.29192937075067,
+          "ig_normal_bits": 1.3855876876321953,
+          "d_ll_bits": {
+            "mean": -0.0026550031708375238,
+            "se": 0.003442536763572899,
+            "t": -0.7712345148877889,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.0019161567286835586
+        },
+        {
+          "fix_index_lo": 8,
+          "fix_index_hi": 8,
+          "label": "8",
+          "n_fixations": 6566,
+          "mean_amplitude_px": 207.4852043656228,
+          "ig_normal_bits": 1.463541110903996,
+          "d_ll_bits": {
+            "mean": 0.003316948363658245,
+            "se": 0.0030955926513768096,
+            "t": 1.0715067314115068,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.0022663855076878858
+        },
+        {
+          "fix_index_lo": 9,
+          "fix_index_hi": 100,
+          "label": "9+",
+          "n_fixations": 7126,
+          "mean_amplitude_px": 208.3077008647909,
+          "ig_normal_bits": 1.454882196702227,
+          "d_ll_bits": {
+            "mean": 0.0017211860576724926,
+            "se": 0.003320471099982758,
+            "t": 0.5183559819814213,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.0011830415284302023
+        }
+      ]
+    },
+    "foveated@20": {
+      "cpd": 20,
+      "n_folds": 10,
+      "bins": [
+        {
+          "fix_index_lo": 1,
+          "fix_index_hi": 1,
+          "label": "1",
+          "n_fixations": 14916,
+          "mean_amplitude_px": 148.75368550026022,
+          "ig_normal_bits": 1.7971427808217566,
+          "d_ll_bits": {
+            "mean": -0.00028978076137472776,
+            "se": 0.009180624742964454,
+            "t": -0.031564383632693455,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.0001612452635745633
+        },
+        {
+          "fix_index_lo": 2,
+          "fix_index_hi": 2,
+          "label": "2",
+          "n_fixations": 14633,
+          "mean_amplitude_px": 173.79727586100606,
+          "ig_normal_bits": 1.7502134453818798,
+          "d_ll_bits": {
+            "mean": -0.008152174283997338,
+            "se": 0.006632246858449297,
+            "t": -1.2291723239480592,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.00465781719681545
+        },
+        {
+          "fix_index_lo": 3,
+          "fix_index_hi": 3,
+          "label": "3",
+          "n_fixations": 14226,
+          "mean_amplitude_px": 192.58908134421705,
+          "ig_normal_bits": 1.5915413912248062,
+          "d_ll_bits": {
+            "mean": -0.0056875627712354385,
+            "se": 0.004268012423753675,
+            "t": -1.3326022060248088,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.003573619135885902
+        },
+        {
+          "fix_index_lo": 4,
+          "fix_index_hi": 4,
+          "label": "4",
+          "n_fixations": 13605,
+          "mean_amplitude_px": 200.16513968452682,
+          "ig_normal_bits": 1.5481054167410262,
+          "d_ll_bits": {
+            "mean": -0.007961898129423028,
+            "se": 0.004744325583292883,
+            "t": -1.6781938738481206,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.005142994813740729
+        },
+        {
+          "fix_index_lo": 5,
+          "fix_index_hi": 5,
+          "label": "5",
+          "n_fixations": 12644,
+          "mean_amplitude_px": 205.13148707551278,
+          "ig_normal_bits": 1.5292431259417616,
+          "d_ll_bits": {
+            "mean": -0.005243225869878318,
+            "se": 0.005395494049436169,
+            "t": -0.9717786400721239,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.0034286411237908
+        },
+        {
+          "fix_index_lo": 6,
+          "fix_index_hi": 6,
+          "label": "6",
+          "n_fixations": 11215,
+          "mean_amplitude_px": 207.06760963070147,
+          "ig_normal_bits": 1.4351468625489772,
+          "d_ll_bits": {
+            "mean": 0.0008144279479390488,
+            "se": 0.0029818944778875135,
+            "t": 0.27312433554524046,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": 0.0005674875298076017
+        },
+        {
+          "fix_index_lo": 7,
+          "fix_index_hi": 7,
+          "label": "7",
+          "n_fixations": 9240,
+          "mean_amplitude_px": 208.29192937075067,
+          "ig_normal_bits": 1.3855876876321953,
+          "d_ll_bits": {
+            "mean": -0.010302849519619451,
+            "se": 0.004314763554422184,
+            "t": -2.3878132346464507,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.007435725368796974
+        },
+        {
+          "fix_index_lo": 8,
+          "fix_index_hi": 8,
+          "label": "8",
+          "n_fixations": 6566,
+          "mean_amplitude_px": 207.4852043656228,
+          "ig_normal_bits": 1.463541110903996,
+          "d_ll_bits": {
+            "mean": -0.004952410343418581,
+            "se": 0.004194365946500208,
+            "t": -1.1807291987841182,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.0033838546157132477
+        },
+        {
+          "fix_index_lo": 9,
+          "fix_index_hi": 100,
+          "label": "9+",
+          "n_fixations": 7126,
+          "mean_amplitude_px": 208.3077008647909,
+          "ig_normal_bits": 1.454882196702227,
+          "d_ll_bits": {
+            "mean": -0.002045585879504683,
+            "se": 0.005482289943601691,
+            "t": -0.373126175475644,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.0014060147853492198
+        }
+      ]
+    },
+    "foveated@10": {
+      "cpd": 10,
+      "n_folds": 10,
+      "bins": [
+        {
+          "fix_index_lo": 1,
+          "fix_index_hi": 1,
+          "label": "1",
+          "n_fixations": 14916,
+          "mean_amplitude_px": 148.75368550026022,
+          "ig_normal_bits": 1.7971427808217566,
+          "d_ll_bits": {
+            "mean": -0.05150963297714638,
+            "se": 0.011525341472224868,
+            "t": -4.469250052267899,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.028661959153625637
+        },
+        {
+          "fix_index_lo": 2,
+          "fix_index_hi": 2,
+          "label": "2",
+          "n_fixations": 14633,
+          "mean_amplitude_px": 173.79727586100606,
+          "ig_normal_bits": 1.7502134453818798,
+          "d_ll_bits": {
+            "mean": -0.057123817747175676,
+            "se": 0.011878832357361311,
+            "t": -4.808874814347898,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.03263820072797567
+        },
+        {
+          "fix_index_lo": 3,
+          "fix_index_hi": 3,
+          "label": "3",
+          "n_fixations": 14226,
+          "mean_amplitude_px": 192.58908134421705,
+          "ig_normal_bits": 1.5915413912248062,
+          "d_ll_bits": {
+            "mean": -0.031680643308514264,
+            "se": 0.006920396429308691,
+            "t": -4.577865391402004,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.019905635808902034
+        },
+        {
+          "fix_index_lo": 4,
+          "fix_index_hi": 4,
+          "label": "4",
+          "n_fixations": 13605,
+          "mean_amplitude_px": 200.16513968452682,
+          "ig_normal_bits": 1.5481054167410262,
+          "d_ll_bits": {
+            "mean": -0.031223022216091356,
+            "se": 0.00532678443734385,
+            "t": -5.8615141242059385,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.020168537541726383
+        },
+        {
+          "fix_index_lo": 5,
+          "fix_index_hi": 5,
+          "label": "5",
+          "n_fixations": 12644,
+          "mean_amplitude_px": 205.13148707551278,
+          "ig_normal_bits": 1.5292431259417616,
+          "d_ll_bits": {
+            "mean": -0.03294308030280384,
+            "se": 0.0058038511092723824,
+            "t": -5.676072608095187,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.021542081663774904
+        },
+        {
+          "fix_index_lo": 6,
+          "fix_index_hi": 6,
+          "label": "6",
+          "n_fixations": 11215,
+          "mean_amplitude_px": 207.06760963070147,
+          "ig_normal_bits": 1.4351468625489772,
+          "d_ll_bits": {
+            "mean": -0.023330875030650126,
+            "se": 0.005502913369445424,
+            "t": -4.239731477546662,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.016256785726592435
+        },
+        {
+          "fix_index_lo": 7,
+          "fix_index_hi": 7,
+          "label": "7",
+          "n_fixations": 9240,
+          "mean_amplitude_px": 208.29192937075067,
+          "ig_normal_bits": 1.3855876876321953,
+          "d_ll_bits": {
+            "mean": -0.029036472784345374,
+            "se": 0.006091404419958434,
+            "t": -4.766794450423882,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.02095607015241688
+        },
+        {
+          "fix_index_lo": 8,
+          "fix_index_hi": 8,
+          "label": "8",
+          "n_fixations": 6566,
+          "mean_amplitude_px": 207.4852043656228,
+          "ig_normal_bits": 1.463541110903996,
+          "d_ll_bits": {
+            "mean": -0.025764139945132835,
+            "se": 0.007974482711184939,
+            "t": -3.2308227227073023,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.01760397419189606
+        },
+        {
+          "fix_index_lo": 9,
+          "fix_index_hi": 100,
+          "label": "9+",
+          "n_fixations": 7126,
+          "mean_amplitude_px": 208.3077008647909,
+          "ig_normal_bits": 1.454882196702227,
+          "d_ll_bits": {
+            "mean": -0.011432902446296044,
+            "se": 0.008847259592895233,
+            "t": -1.2922535307404346,
+            "n_folds": 10
+          },
+          "d_ll_as_share_of_level": -0.007858301154698943
+        }
+      ]
+    }
+  }
+}

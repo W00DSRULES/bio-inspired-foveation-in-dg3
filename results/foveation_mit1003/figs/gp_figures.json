@@ -1,0 +1,37 @@
+{
+  "ppd": 35.0,
+  "e2_deg": 2.3,
+  "gp_stim": 91,
+  "gp_stim_label": "i132306037.jpeg",
+  "grid_stims": [
+    200,
+    300,
+    450,
+    700
+  ],
+  "acuity_cpds": [
+    40.0,
+    20.0,
+    10.0
+  ],
+  "pyramid_cpds": [
+    40.0,
+    20.0
+  ],
+  "stepvsinterp_cpd": 10.0,
+  "arm_cpd": 40.0,
+  "foveation": "tez_deepgaze.foveate_input.Foveation",
+  "device": "mps",
+  "regenerated": [
+    "gp_strength_grid"
+  ],
+  "grid_mean_abs_change": {
+    "40": 1.77,
+    "20": 3.39,
+    "10": 5.61
+  },
+  "pyramid_level_max": {
+    "40": 1.97,
+    "20": 2.97
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "split": "test",
+  "source": {
+    "delta_ig": "results/foveation_mit1003_initial/test/per_image_ig.json",
+    "dispersion": "results/per_image_diagnostic_initial_1003/diagnostic.json"
+  },
+  "arms": {
+    "foveated@40": {
+      "n_stimuli": 1003,
+      "mean_delta_ig": 0.0038894855363048875,
+      "fixation_entropy_norm": {
+        "pearson_r": 0.018872658519900373,
+        "spearman_rho": 0.017594436196622813
+      },
+      "consensus_area_75_pct": {
+        "pearson_r": -0.016840039106290935,
+        "spearman_rho": -0.0008955865678842474
+      }
+    },
+    "foveated@20": {
+      "n_stimuli": 1003,
+      "mean_delta_ig": -0.005875532760240708,
+      "fixation_entropy_norm": {
+        "pearson_r": 0.04612200668204413,
+        "spearman_rho": 0.04347423649798749
+      },
+      "consensus_area_75_pct": {
+        "pearson_r": -0.018412283939875946,
+        "spearman_rho": -0.018587154108345258
+      }
+    },
+    "foveated@10": {
+      "n_stimuli": 1003,
+      "mean_delta_ig": -0.03658588839504806,
+      "fixation_entropy_norm": {
+        "pearson_r": 0.045728748299228496,
+        "spearman_rho": 0.049480218361543475
+      },
+      "consensus_area_75_pct": {
+        "pearson_r": -0.02422502554690971,
+        "spearman_rho": -0.02942774098973724
+      }
+    }
+  },
+  "largest_abs_correlation": 0.049480218361543475
+}

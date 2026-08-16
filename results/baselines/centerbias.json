@@ -1,0 +1,7 @@
+{
+  "model": "centerbias",
+  "n_fixations_evaluated": 89255,
+  "ll_per_fixation_nats": -12.994417794230971,
+  "ll_per_fixation_bits": -18.746982110976326,
+  "n_scanpaths": 15045
+}

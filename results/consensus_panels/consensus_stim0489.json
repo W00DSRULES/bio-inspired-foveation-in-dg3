@@ -1,0 +1,25 @@
+{
+  "stim_idx": 489,
+  "stim_label": "i2062358324.jpeg",
+  "image_shape_hw": [
+    683,
+    1024
+  ],
+  "n_subjects": 15,
+  "consensus_radius_px": 70,
+  "thresholds": {
+    "th75_subjects": 12,
+    "th90_subjects": 14
+  },
+  "consensus_area_pct": {
+    "th75": 0.923373444363104,
+    "th90": 0.014870058565153733
+  },
+  "map_start_xy": [
+    512.0,
+    341.5
+  ],
+  "device": "mps",
+  "model": "DeepGazeIII(pretrained=True)",
+  "out_png": "results/consensus_panels/consensus_stim0489.png"
+}
