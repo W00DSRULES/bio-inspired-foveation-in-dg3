@@ -86,8 +86,8 @@ set -euo pipefail
 module purge
 module load nvidia/cuda/12.3.0
 
-WORKDIR=/work/dldevel/itez/Tez
-export TORCH_HOME=/work/dldevel/itez/torch-cache
+WORKDIR="/work/<project>/<user>/Tez"
+export TORCH_HOME="/work/<project>/<user>/torch-cache"
 export TEZ_DATA_ROOT=$WORKDIR/data/mit1003
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 # MIT1003 has 142 distinct image shapes, which fragments the caching

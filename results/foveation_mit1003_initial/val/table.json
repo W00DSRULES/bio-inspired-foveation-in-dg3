@@ -383,7 +383,7 @@
       }
     }
   },
-  "ckpt_root": "/work/dldevel/itez/Tez/results/foveation_mit1003/ckpts_initial",
+  "ckpt_root": "results/foveation_mit1003/ckpts_initial",
   "dataset_variant": "initial",
   "epoch_requested": 5,
   "epochs_used": [

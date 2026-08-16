@@ -39,7 +39,7 @@
 #   TEZ_CKPT_ROOT  : per-(arm,fold) checkpoints. Default results/foveation_mit1003/ckpts.
 #   TEZ_EPOCH      : checkpoint epoch to eval. Default: last epoch present.
 #   TEZ_OUT        : output dir. Default results/foveation_mit1003.
-#   TEZ_WORKDIR    : tree to evaluate from. Default /work/dldevel/itez/Tez. Point
+#   TEZ_WORKDIR    : tree to evaluate from. Default /work/<project>/<user>/Tez. Point
 #                    it at a copy to run an export from a known-good checkout
 #                    without disturbing the main tree — same knob as pytest.sbatch.
 #                    Pair it with an absolute TEZ_CKPT_ROOT,
@@ -51,9 +51,9 @@ set -euo pipefail
 module purge
 module load nvidia/cuda/12.3.0
 
-WORKDIR=${TEZ_WORKDIR:-/work/dldevel/itez/Tez}
+WORKDIR=${TEZ_WORKDIR:-"/work/<project>/<user>/Tez"}
 VENV=${TEZ_VENV:-$WORKDIR/.venv}
-export TORCH_HOME=/work/dldevel/itez/torch-cache
+export TORCH_HOME="/work/<project>/<user>/torch-cache"
 export TEZ_DATA_ROOT=$WORKDIR/data/mit1003
 # Evaluate the source in WORKDIR, not whatever the venv has installed — the venv
 # holds tez_deepgaze as an editable install pointing at the main checkout.

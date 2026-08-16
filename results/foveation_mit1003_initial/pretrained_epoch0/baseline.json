@@ -1,0 +1,32 @@
+{
+  "model": "DeepGazeIII-pretrained",
+  "heads": "pretrained (no fine-tuning)",
+  "dataset_variant": "initial",
+  "n_images": 1003,
+  "n_fixations": 104171,
+  "source": "pretrained_epoch0/val/per_image_ig.json, arm normal, with each image's scored fixation count from the dataset",
+  "ig_bits_pooled": 1.5620407792512967,
+  "per_image": {
+    "IG_bits": {
+      "mean": 1.5576626332086554,
+      "se": 0.01998142694190223
+    },
+    "NSS": {
+      "mean": 3.265394793734839,
+      "se": 0.033226172938455874
+    },
+    "AUC": {
+      "mean": 0.9174689431081798,
+      "se": 0.0009156769900638315
+    },
+    "LL_bits": {
+      "mean": 2.475286401103956,
+      "se": 0.019910692747154787
+    },
+    "LL_raw_bits": {
+      "mean": -17.0525384697142,
+      "se": 0.01993601570659719
+    }
+  },
+  "note": "ig_bits_pooled weights each image by its scored fixations. per_image entries are means over the images with the standard error of that mean; the thesis prints two standard errors."
+}

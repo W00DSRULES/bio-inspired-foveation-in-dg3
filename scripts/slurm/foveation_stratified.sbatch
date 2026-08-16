@@ -44,8 +44,8 @@ set -euo pipefail
 module purge
 module load nvidia/cuda/12.3.0
 
-WORKDIR=/work/dldevel/itez/Tez
-export TORCH_HOME=/work/dldevel/itez/torch-cache
+WORKDIR="/work/<project>/<user>/Tez"
+export TORCH_HOME="/work/<project>/<user>/torch-cache"
 export TEZ_DATA_ROOT=$WORKDIR/data/mit1003
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True

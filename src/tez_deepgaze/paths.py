@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # MIT1003 dataset directory. Defaults to ``<repo>/data/mit1003``; set
 # ``TEZ_DATA_ROOT`` to point at a different filesystem (e.g.
-# ``/work/dldevel/itez/Tez/data/mit1003`` on Goethe-NHR).
+# ``/work/<project>/<user>/Tez/data/mit1003`` on Goethe-NHR).
 DATA_ROOT = Path(os.environ.get("TEZ_DATA_ROOT", REPO_ROOT / "data" / "mit1003"))
 
 RESULTS = REPO_ROOT / "results"

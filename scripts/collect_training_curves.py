@@ -10,7 +10,7 @@ figure stays regenerable from the repo once the checkpoint tree is gone.
 Run it where the checkpoints are (the cluster), then copy the result back:
 
     python scripts/collect_training_curves.py
-    scp goethe:/work/dldevel/itez/Tez/results/foveation_mit1003/training_curves.json \\
+    scp <cluster>:/work/<project>/<user>/Tez/results/foveation_mit1003/training_curves.json \\
         results/foveation_mit1003/
 
 It reads nothing but JSON, so it needs no GPU, no model and no corpus, and it is

@@ -1,14 +1,14 @@
 # SLURM scripts — Goethe-NHR
 
 Submission templates for running this repo on the CSC Goethe-NHR cluster
-(`ssh itez@goethe.hhlr-gu.de`).
+(`ssh <user>@goethe.hhlr-gu.de`).
 
 ## Cluster layout (as of bootstrap)
 
 | Path | Use |
 |------|-----|
-| `/home/dldevel/itez` | dotfiles, small configs. 30 GB quota — do NOT put `.venv/`, datasets, or weights here. |
-| `/work/dldevel/itez` | repo (`Tez/`), `.venv/`, dataset, weights cache, results. 94 TB group quota. |
+| `/home/<project>/<user>` | dotfiles, small configs. 30 GB quota — do NOT put `.venv/`, datasets, or weights here. |
+| `/work/<project>/<user>` | repo (`Tez/`), `.venv/`, dataset, weights cache, results. 94 TB group quota. |
 
 GPU partitions (`sinfo -o "%P %l %G %f"`):
 
@@ -37,8 +37,8 @@ to `$WORKDIR/data/mit1003/`.
 ## One-time bootstrap (login node)
 
 ```bash
-ssh itez@goethe.hhlr-gu.de
-cd /work/dldevel/itez
+ssh <user>@goethe.hhlr-gu.de
+cd /work/<project>/<user>
 
 # 1. Repo
 git clone <repo-url> Tez && cd Tez
@@ -58,8 +58,8 @@ uv sync
 ## Prefetch artefacts (login node has internet; compute nodes do NOT)
 
 ```bash
-export TORCH_HOME=/work/dldevel/itez/torch-cache
-export TEZ_DATA_ROOT=/work/dldevel/itez/Tez/data/mit1003
+export TORCH_HOME=/work/<project>/<user>/torch-cache
+export TEZ_DATA_ROOT=/work/<project>/<user>/Tez/data/mit1003
 
 # DG3 pretrained weights → $TORCH_HOME/hub/checkpoints/deepgaze3.pth
 .venv/bin/python -c "import deepgaze_pytorch; deepgaze_pytorch.DeepGazeIII(pretrained=True)"
@@ -76,16 +76,16 @@ there):
 ```bash
 # On laptop, in the repo root:
 rsync -avh --progress data/mit1003/ \
-    itez@goethe.hhlr-gu.de:/work/dldevel/itez/Tez/data/mit1003/
+    <user>@goethe.hhlr-gu.de:/work/<project>/<user>/Tez/data/mit1003/
 ```
 
 After upload, on the cluster, confirm:
 
 ```bash
-ls /work/dldevel/itez/Tez/data/mit1003/MIT1003/
+ls /work/<project>/<user>/Tez/data/mit1003/MIT1003/
 # expected: stimuli/  stimuli.hdf5  fixations.hdf5
-ls -la /work/dldevel/itez/torch-cache/hub/checkpoints/deepgaze3.pth
-ls -la /work/dldevel/itez/Tez/data/centerbias_mit1003.npy
+ls -la /work/<project>/<user>/torch-cache/hub/checkpoints/deepgaze3.pth
+ls -la /work/<project>/<user>/Tez/data/centerbias_mit1003.npy
 ```
 
 ## Interactive smoke (GPU node)
@@ -95,51 +95,23 @@ Before submitting a batch job, prove the env works end-to-end on a real GPU:
 ```bash
 srun --partition=gpu2 --qos=gpu2 --gres=gpu:1 --time=00:30:00 --pty bash
 module load nvidia/cuda/12.3.0
-export TORCH_HOME=/work/dldevel/itez/torch-cache
-export TEZ_DATA_ROOT=/work/dldevel/itez/Tez/data/mit1003
-cd /work/dldevel/itez/Tez
+export TORCH_HOME=/work/<project>/<user>/torch-cache
+export TEZ_DATA_ROOT=/work/<project>/<user>/Tez/data/mit1003
+cd /work/<project>/<user>/Tez
 
 # 1 forward pass on CUDA
 .venv/bin/python scripts/smoke_test.py
-
-# 20-scanpath schema-v2 run (fast; overwrite-safe only if pointed away from
-# the committed artefact, hence --out into scratch)
-.venv/bin/python -m tez_deepgaze.baseline --subsample 20 --device cuda \
-    --out results/baselines/baseline_smoke.json
 exit
 ```
 
-Expected: `device: cuda`, both forward passes finish in seconds.
-
-## Full-corpus batch run
-
-```bash
-cd /work/dldevel/itez/Tez
-mkdir -p logs
-sbatch scripts/slurm/baseline_full.sbatch
-squeue -u $USER
-
-# When the job finishes:
-python -m json.tool < results/baselines/baseline.json | head -60
-```
-
-Invariants to check in `results/baselines/baseline.json`:
-
-- `device: "cuda"`
-- `n_fixations_evaluated` ≈ 89,255
-- `n_images` ≈ 1003
-- `$schema_version: 2`
-- `weights_sha256` and `centerbias_sha256` are real hashes, not `"MISSING"`
-- `ig_bits_corpus_pooled` close to `kumerer_2022_target_ig_bits` (1.536).
-  The local MPS subsample produced 1.4284; the full-corpus number should
-  land in roughly the 1.45–1.55 range. A residual gap is expected.
+Expected: `device: cuda`, the forward pass finishes in seconds.
 
 ## Environment variables consumed by the codebase
 
 | Variable | Read by | Effect |
 |----------|---------|--------|
-| `TEZ_DATA_ROOT` | `baseline.py`, `cv_split.py`, `centerbias.py` | Overrides MIT1003 dataset dir + centerbias cache location. Default: `<repo>/data/mit1003`. |
-| `TORCH_HOME` | torch + `baseline.py::WEIGHTS_PATH` | Pretrained weights cache. Default: `~/.cache/torch`. Set to `/work/dldevel/itez/torch-cache` on the cluster so SHA-256 is recorded correctly. |
+| `TEZ_DATA_ROOT` | `paths.py`, `cv_split.py`, `centerbias.py` | Overrides MIT1003 dataset dir + centerbias cache location. Default: `<repo>/data/mit1003`. |
+| `TORCH_HOME` | torch + `paths.py` | Pretrained weights cache. Default: `~/.cache/torch`. Set to `/work/<project>/<user>/torch-cache` on the cluster so SHA-256 is recorded correctly. |
 | `CUBLAS_WORKSPACE_CONFIG` | CUDA | Required by `torch.use_deterministic_algorithms(True)`. Set to `:4096:8`. |
 
 ## Gaze-contingent foveation vs normal (10-fold CV + foveal_cpd sweep)
@@ -164,7 +136,7 @@ incomplete fold from its newest complete epoch bundle. Prefer the pump to the
 loops below; the loops show what each job needs.
 
 ```bash
-cd /work/dldevel/itez/Tez && mkdir -p logs
+cd /work/<project>/<user>/Tez && mkdir -p logs
 
 # normal arm, 10 folds (foveal_cpd irrelevant for this arm)
 for k in 0 1 2 3 4 5 6 7 8 9; do
@@ -229,8 +201,8 @@ need not be the reporting epoch — pass it explicitly.
 ```bash
 srun --partition=gpu2 --qos=gpu2 --gres=gpu:1 --time=00:30:00 --pty bash
 module load nvidia/cuda/12.3.0
-export TORCH_HOME=/work/dldevel/itez/torch-cache TEZ_DATA_ROOT=/work/dldevel/itez/Tez/data/mit1003
-cd /work/dldevel/itez/Tez
+export TORCH_HOME=/work/<project>/<user>/torch-cache TEZ_DATA_ROOT=/work/<project>/<user>/Tez/data/mit1003
+cd /work/<project>/<user>/Tez
 .venv/bin/python -m tez_deepgaze.foveated_train --device cuda --fold 0 --epochs 1 \
     --subsample-train 20 --subsample-val 10 --foveate --foveal-cpd 20
 exit

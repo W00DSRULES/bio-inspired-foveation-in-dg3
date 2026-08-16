@@ -18,10 +18,10 @@
 # stays paired on all ten folds.
 #
 # Launch detached from the login node:
-#   cd /work/dldevel/itez/Tez
+#   cd /work/<project>/<user>/Tez
 #   nohup bash scripts/slurm/foveation_pump.sh > logs/pump.log 2>&1 < /dev/null &
 set -euo pipefail
-cd /work/dldevel/itez/Tez || { echo "ERROR: cannot cd to /work/dldevel/itez/Tez" >&2; exit 1; }
+cd "/work/<project>/<user>/Tez" || { echo "ERROR: cannot cd to the cluster checkout" >&2; exit 1; }
 LIMIT=12    # gpu2 QOS: MaxSubmitPU=12, MaxJobsPU=4 (only 4 ever run at once)
 # Protocol length, with the 10x rate decay — see foveation_train_fold.sbatch
 # header. The default 12 matches that file's TEZ_EPOCHS default; an override

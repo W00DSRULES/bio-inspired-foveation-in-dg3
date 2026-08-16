@@ -16,22 +16,22 @@
 # one whose arithmetic matters.
 #
 # Env knobs:
-#   TEZ_WORKDIR     : tree to test. Default /work/dldevel/itez/Tez. Point it at a
+#   TEZ_WORKDIR     : tree to test. Default /work/<project>/<user>/Tez. Point it at a
 #                     copy to test code without disturbing the pinned checkout.
 #   TEZ_VENV        : interpreter to use. Default $TEZ_WORKDIR/.venv, which may be
 #                     a symlink to the main tree's environment.
 #   TEZ_PYTEST_ARGS : pytest arguments. Default "tests -v".
 #
-#   TEZ_WORKDIR=/work/dldevel/itez/Tez-tests sbatch scripts/slurm/pytest.sbatch
+#   TEZ_WORKDIR="/work/<project>/<user>/Tez"-tests sbatch scripts/slurm/pytest.sbatch
 
 set -euo pipefail
 
 module purge
 module load nvidia/cuda/12.3.0
 
-WORKDIR=${TEZ_WORKDIR:-/work/dldevel/itez/Tez}
+WORKDIR=${TEZ_WORKDIR:-"/work/<project>/<user>/Tez"}
 VENV=${TEZ_VENV:-$WORKDIR/.venv}
-export TORCH_HOME=/work/dldevel/itez/torch-cache
+export TORCH_HOME="/work/<project>/<user>/torch-cache"
 export TEZ_DATA_ROOT=$WORKDIR/data/mit1003
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True

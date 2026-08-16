@@ -4,8 +4,9 @@ Companion to ``make_protocol_figures.py``, which draws what the transform *is*.
 This draws what the production run *measured*. Everything here reads a committed
 JSON under ``results/foveation_mit1003_initial/`` — no model and no forward pass —
 so it runs on a laptop in seconds and every figure is regenerable from the repo.
-The one dataset read is ``training_curves``, which needs each stimulus's scored
-fixation count to put epoch 0 on the same scale as the rest of the curve.
+The dataset is read for each stimulus's scored fixation count, which
+``training_curves`` needs to put epoch 0 on the same scale as the rest of the
+curve and ``baseline`` needs to pool IG over fixations.
 
 Results (ch04):
 
@@ -32,6 +33,10 @@ sections meet, and ch05 disc-per-image quotes the bound it writes.
 ``grouping_intervals.json`` re-derives the by-image and by-subject intervals ch04
 compares the fold pairing against, so those two numbers come out of code rather
 than out of prose.
+
+``pretrained_epoch0/baseline.json`` is the pretrained read-out over the whole
+dataset (ch04 results-baseline), assembled from the per-image scores of the
+pretrained validation sweep, whose ten folds tile the dataset once.
 
     .venv/bin/python scripts/make_results_figures.py
     .venv/bin/python scripts/make_results_figures.py --only training_curves
@@ -597,6 +602,47 @@ def write_grouping_intervals(test_arm: str = "fov_cpd40", ref_arm: str = "normal
     return p
 
 
+
+def write_baseline() -> Path:
+    """The pretrained read-out over the whole dataset, from ``pretrained_epoch0/val``.
+
+    The ten validation folds tile the dataset once and the pretrained read-out is
+    the same on every fold, so their per-image scores together are one evaluation
+    of the pretrained model on all 1003 images: the baseline of ch04
+    results-baseline. IG is written two ways, pooled over fixations (the
+    convention of the published figure) and as a per-image mean; NSS, AUC and the
+    log-likelihoods are per-image means, each with the standard error of that
+    mean.
+    """
+    folds = load(EPOCH0, "per_image_ig.json")["arms"]["normal"]
+    n_fix = fixations_per_stimulus()
+    stim = np.concatenate([np.asarray(f["stim"], int) for f in folds])
+    w = np.array([n_fix[int(s)] for s in stim], float)
+    cols = {k: np.concatenate([np.asarray(f[k], float) for f in folds])
+            for k in ("IG_bits", "NSS", "AUC", "LL_bits", "LL_raw_bits")}
+
+    def stat(v: np.ndarray) -> dict:
+        return {"mean": float(v.mean()), "se": float(v.std(ddof=1) / np.sqrt(v.size))}
+
+    out = {
+        "model": "DeepGazeIII-pretrained",
+        "heads": "pretrained (no fine-tuning)",
+        "dataset_variant": "initial",
+        "n_images": int(stim.size),
+        "n_fixations": int(w.sum()),
+        "source": f"{EPOCH0}/per_image_ig.json, arm normal, with each image's scored "
+                  "fixation count from the dataset",
+        "ig_bits_pooled": float(np.average(cols["IG_bits"], weights=w)),
+        "per_image": {k: stat(v) for k, v in cols.items()},
+        "note": "ig_bits_pooled weights each image by its scored fixations. per_image "
+                "entries are means over the images with the standard error of that "
+                "mean; the thesis prints two standard errors.",
+    }
+    p = RES / "pretrained_epoch0" / "baseline.json"
+    p.write_text(json.dumps(out, indent=2) + "\n")
+    return p
+
+
 # --------------------------------------------------------------------------- 4
 
 STRAT = RES / "stratified"
@@ -730,7 +776,7 @@ FIGURES = {
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--only", nargs="+", choices=sorted(FIGURES) + ["tables", "dispersion", "groupings"],
+    ap.add_argument("--only", nargs="+", choices=sorted(FIGURES) + ["tables", "dispersion", "groupings", "baseline"],
                     help="regenerate a subset (default: all figures, the tables and the "
                          "dispersion link)")
     ap.add_argument("--results-root", type=Path, default=None,
@@ -746,13 +792,15 @@ def main() -> None:
         STRAT = RES / "stratified"
         load.cache_clear()   # keyed on the path parts, not on RES
 
-    names = args.only or list(FIGURES) + ["tables", "dispersion", "groupings"]
+    names = args.only or list(FIGURES) + ["tables", "dispersion", "groupings", "baseline"]
     OUT.mkdir(parents=True, exist_ok=True)
     for name in names:
         if name == "tables":
             print(f"wrote {write_tables()}")
         elif name == "groupings":
             print(f"wrote {write_grouping_intervals()}")
+        elif name == "baseline":
+            print(f"wrote {write_baseline()}")
         elif name == "dispersion":
             if RES != DISPERSION_RES:
                 print(f"skipped dispersion: {PER_IMAGE_DIAG.name} is scored under the "

@@ -41,7 +41,6 @@ dev = [
 ]
 
 [project.scripts]
-tez-baseline = "tez_deepgaze.baseline:main"
 tez-cv-split = "tez_deepgaze.cv_split:main"
 
 [build-system]
