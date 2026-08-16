@@ -143,7 +143,9 @@ def analyse(rn: dict, rf: dict, foveal_cpd: float, ppd: float) -> dict:
     ig_f = b["ll_bits"] - b["cb_bits"]
     d_ll = b["ll_bits"] - a["ll_bits"]        # == d_IG, the centerbias cancels
     amp = a["sacc_px"]
-    r_sharp = identity_radius_px(foveal_cpd, ppd)
+    # Rounded because the radius is itself a bin edge: at cutoff 40 it arrives as
+    # 103.49999999999999 and the 70-103.5 px bin would otherwise be flagged outside.
+    r_sharp = round(identity_radius_px(foveal_cpd, ppd), 6)
 
     by_amp = []
     for lo, hi in zip(AMP_EDGES[:-1], AMP_EDGES[1:]):

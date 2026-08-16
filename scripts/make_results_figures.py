@@ -30,9 +30,9 @@ the artefacts.
 fixation entropy of ch04 4.2. It is the one place the chapter's two results
 sections meet, and ch05 disc-per-image quotes the bound it writes.
 
-``grouping_intervals.json`` re-derives the by-image and by-subject intervals ch04
-compares the fold pairing against, so those two numbers come out of code rather
-than out of prose.
+``grouping_intervals.json`` re-derives the by-image and by-subject intervals for
+reference; the thesis no longer quotes them (it reports the fold pairing alone),
+so nothing cites this file.
 
 ``pretrained_epoch0/baseline.json`` is the pretrained read-out over the whole
 dataset (ch04 results-baseline), assembled from the per-image scores of the
@@ -482,10 +482,9 @@ def write_tables() -> Path:
 
 \\begin{{table}}[tbp]
 \\centering
-\\caption[The production matrix: seven arms, ten folds]{{Seven arms, ten image-stratified folds,
-test split at epoch {epoch}. The first three columns are means over the ten folds; their spread
-across folds is dominated by image difficulty, which every arm shares. The last column pairs the
-folds, so that shared component cancels, and carries two standard errors of its mean.}}
+\\caption[Seven arms, ten folds]{{Seven arms, ten image-stratified folds, test split at epoch {epoch}.
+The first three columns are means over the ten folds; the last pairs the folds and carries two standard
+errors of its mean.}}
 \\label{{tab:phase17-arms}}
 \\small
 \\setlength{{\\tabcolsep}}{{4.5pt}}

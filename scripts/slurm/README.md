@@ -178,16 +178,19 @@ done
 epoch and the output directory from the environment, so an export needs no code
 change. `foveation_sweep_table.py` appends the split to `--out`, so the default
 `TEZ_OUT` lands in `results/foveation_mit1003/{val,test}/`. This is the command
-that reproduces a test table:
+that reproduces the thesis test table (`results/foveation_mit1003_initial/test/`,
+epoch 5 of the seven-epoch paper-protocol run):
 
 ```bash
 TEZ_CPDS="40 20 10" TEZ_CENTER_CPDS="40 20 10" \
-TEZ_SPLIT=test TEZ_EPOCH=7 \
+TEZ_SPLIT=test TEZ_EPOCH=5 TEZ_DATASET_VARIANT=initial \
 sbatch scripts/slurm/foveation_sweep_eval.sbatch
 ```
 
-Writes `results/foveation_mit1003/test/table.{md,json}`, `per_image_ig.json` and
-the sweep figure; `TEZ_SPLIT=val` writes the val counterpart. The `normal` control
+With `TEZ_DATASET_VARIANT=initial` the sbatch derives `TEZ_CKPT_ROOT`
+(`results/foveation_mit1003/ckpts_initial`) and `TEZ_OUT`
+(`results/foveation_mit1003_initial`) itself. It writes `table.{md,json}`,
+`per_image_ig.json` and the sweep figure; `TEZ_SPLIT=val` writes the val counterpart. The `normal` control
 arm is always evaluated alongside whatever cutoffs are named, so the ΔIG in the
 output is self-contained. Requires the matching
 `results/foveation_mit1003/ckpts/<tag>/fold{0..9}/` on the cluster. Narrowing
