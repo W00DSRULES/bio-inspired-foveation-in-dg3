@@ -68,6 +68,7 @@ def build_consensus_panel(
     title_suffix: str = "",
     panel_titles: bool = True,
     page_frac: float = 0.89,
+    suptitle: bool = True,
 ):
     """Build the 3-panel consensus figure for one stimulus.
 
@@ -145,7 +146,10 @@ def build_consensus_panel(
     # The stimulus number, not the MIT filename: the number is what the chapter
     # and every other figure refer to, and the filename identifies nothing a
     # reader of the thesis can look up.
-    fig.suptitle(f"Stimulus {stim_idx}{title_suffix}", fontsize=11)
+    # ``suptitle=False`` drops the stimulus line as well, for the ch04 stacks whose
+    # caption names the stimulus and its metrics; the rows then sit flush.
+    if suptitle:
+        fig.suptitle(f"Stimulus {stim_idx}{title_suffix}", fontsize=11)
     fig.tight_layout()
 
     summary = {

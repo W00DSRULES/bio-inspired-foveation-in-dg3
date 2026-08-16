@@ -18,14 +18,15 @@ Usage:
     python scripts/demo_consensus_panel.py --stim-indices 71 77 91 455 522 876 884
     python scripts/demo_consensus_panel.py --stim-indices 91 --radius 60
 
-The six composites ch04 stacks (the extremes of Figure "The extreme stimuli by
-information gain") carry the stimulus's per-image IG, NSS and AUC in the title,
-read from the per-image diagnostic, and only the first carries the A/B/C panel
-headings:
+The six composites ch04 stacks in two figures (the three highest and the three
+lowest stimuli by information gain) carry no titles at all -- the caption names
+each stimulus and its IG, NSS and AUC -- and are drawn for the full text width:
 
     python scripts/demo_consensus_panel.py --stim-indices 128 704 528 750 639 489 \
-        --metrics-from results/per_image_diagnostic_initial_1003/diagnostic.json \
-        --titles-first-only
+        --no-titles --page-frac 1.0
+
+``--metrics-from`` puts the per-image metrics in the title instead, and
+``--titles-first-only`` keeps the A/B/C headings on the first stimulus only.
 """
 from __future__ import annotations
 
@@ -68,8 +69,9 @@ def run(args) -> None:
         fig, summary = build_consensus_panel(
             sidx, stimuli=stimuli, fixations=fixations, model=model, device=device,
             radius=args.radius, out_dir=DEFAULT_OUT, title_suffix=suffix,
-            panel_titles=(k == 0) or not args.titles_first_only,
+            panel_titles=(not args.no_titles) and ((k == 0) or not args.titles_first_only),
             page_frac=args.page_frac,
+            suptitle=not args.no_titles,
         )
         plt.close(fig)
         elapsed = time.time() - t0
@@ -88,6 +90,9 @@ def main() -> None:
                          "AUC in its title")
     ap.add_argument("--titles-first-only", action="store_true",
                     help="A/B/C panel headings on the first stimulus only")
+    ap.add_argument("--no-titles", action="store_true",
+                    help="no stimulus line and no A/B/C headings (the ch04 stacks; "
+                         "their caption carries the stimulus and its metrics)")
     ap.add_argument("--page-frac", type=float, default=0.89,
                     help="fraction of the text width the composite prints at (the ch04 "
                          "stack of six uses 0.5)")
