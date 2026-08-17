@@ -23,7 +23,7 @@ thesis.
 
 | # | Notebook | Reproduces | Cost |
 |---|---|---|---|
-| 04 | [`04_foveation_figures.ipynb`](04_foveation_figures.ipynb) | every entry in `make_protocol_figures.FIGURES` — four of them in ch03, two in ch04, one in the appendix, the rest supporting material. It reads the script's own `FIGURE_DIR`, so a figure that writes outside `foveation_mit1003/figs/` is still found | no model; ~30 s on GPU, minutes on CPU |
+| 04 | [`04_foveation_figures.ipynb`](04_foveation_figures.ipynb) | every entry in `make_protocol_figures.FIGURES` — four of them in ch03, two in ch04, the rest supporting material. It reads the script's own `FIGURE_DIR`, so a figure that writes outside `foveation_mit1003/figs/` is still found | no model; ~30 s on GPU, minutes on CPU |
 | 05 | [`05_gaze_contingent_demo.ipynb`](05_gaze_contingent_demo.ipynb) | `foveation_mit1003/gaze_contingent_demo_stim0091.png` and `next_pixel_check_stim0091.png` — README figures, not thesis figures | DG3 forward-only; ~5 min |
 | 06 | [`06_intro_scanpath.ipynb`](06_intro_scanpath.ipynb) | `foveation_mit1003/intro_scanpath_stim0091.png` (ch01) | no model; seconds |
 | 07 | [`07_per_image_diagnostic.ipynb`](07_per_image_diagnostic.ipynb) | §1 redraws `per_image_diagnostic_initial_1003/scatter.png` — the figure ch04 includes — from its committed JSON. §2 reruns the pipeline on a laptop-sized sample under the same protocol, into a gitignored scratch directory | §1 no model, seconds · §2 DG3 over 50 stimuli, **30 min+** |
@@ -40,12 +40,11 @@ chapter includes the figure.
 | `foveation_mit1003_initial/figs/` — `stratified_amplitude`, `stratified_fixation_index` | ch04 | notebook 04 · `scripts/make_protocol_figures.py` — these read the primary run, so they land in the initial tree |
 | `foveation_mit1003_initial/figs/training_curves.png` | ch03 | `scripts/make_results_figures.py` — the one figure in that script that reads the dataset, for the epoch-0 fixation weights |
 | `foveation_mit1003_initial/figs/fold_paired.png` | ch04 | `scripts/make_results_figures.py`, which also writes `results_tables.tex`, `per_image_dispersion.json` and `grouping_intervals.json` |
-| `foveation_mit1003/gaze_contingent_demo_stim0091.png` | — | notebook 05 · `scripts/demo_foveated_scanpath.py`. A README figure |
-| `foveation_mit1003/next_pixel_check_stim0091.png` | — | notebook 05 · `scripts/next_pixel_check.py`. A README figure |
+| `foveation_mit1003/gaze_contingent_demo_stim0091.png` | — | notebook 05 · `scripts/demo_foveated_scanpath.py`; a demo output, no chapter includes it |
+| `foveation_mit1003/next_pixel_check_stim0091.png` | — | notebook 05 · `scripts/next_pixel_check.py`; a demo output, no chapter includes it |
 | `foveation_mit1003/intro_scanpath_stim0091.png` | ch01 | notebook 06 · `scripts/demo_intro_scanpath.py` |
 | `per_image_diagnostic_initial_1003/scatter.png` | ch04 | notebook 07 §1 · `scripts/per_image_diagnostic.py --replot --out results/per_image_diagnostic_initial_1003` redraws it from the committed JSON on a laptop; computing it (`--n-stim 1003 --dataset-variant initial`) is **cluster only** |
 | `consensus_panels/consensus_stim*.png` — the six of ch04's two extremes figures (128 704 528 / 750 639 489) | ch04 | notebook 02, last cell · `scripts/demo_consensus_panel.py --stim-indices 128 704 528 750 639 489 --no-titles --page-frac 1.0` — no in-image titles; the caption names each stimulus and its IG, NSS and AUC |
-| `consensus_panels/consensus_method.png` | appendix | notebook 04 · `scripts/make_protocol_figures.py --only consensus_method` — it writes here rather than into `figs/` |
 | `foveation_mit1003_initial/figs/entropy_panel.png` | ch03 | `scripts/entropy_panel.py` — reads the committed `diagnostic.json` and the fixation data; no model, no GPU |
 | `foveation_mit1003_initial/stratified/index_profile.json` (the fixation-index paragraph of ch04 §Where the cost falls) | ch04 | `scripts/index_profile.py` — aggregates the gitignored per-fixation dumps, as `collect_training_curves.py` does for the checkpoints |
 | `demos/priority_evolution/priority_evolution_stim0091.png` | ch02 | `scripts/demo_priority_evolution.py --stim-idx 91` (ranks 1 3 4) — feeds subject 0's recorded scanpath, nothing sampled (notebook 03 is the sampling playground and does not draw the thesis figure) |

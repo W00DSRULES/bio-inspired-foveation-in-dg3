@@ -1,0 +1,27 @@
+\chapter{Conclusion}
+\label{ch:conclusion}
+
+This thesis added a biological constraint that \dg{} lacked, the foveated eye, and measured
+its effect.
+The arms were trained on MIT1003 against an otherwise-identical sharp-input control. At human acuity
+the foveated input differs from sharp by at most $0.0071$~bits per fixation, under $1\%$ of what the
+sharp control gains over the centerbias. A third set of arms, holding the
+same blur fixed at the image centre, isolates gaze-contingency. The fixed-centre arms sit below the
+gaze-contingent ones at every cutoff, by $0.003 \pm 0.003$~bits at human acuity and $0.013 \pm 0.004$ at
+the coarsest, so the gap widens as the periphery is degraded further.
+
+At human acuity the foveation removed nothing the fit depended on measurably. Past it, at the cutoffs
+where the blur is stronger than a human eye applies, it did, within what a frozen backbone lets the
+comparison attribute to the input (\secref{disc-limits}), and the cost appears as a loss of concentration
+rather than of ranking.
+
+Across images, \dg{}'s fit varies more than any arm differs from another, and that variation follows how
+far the fifteen subjects spread; the arm comparison is small against it and is read within images for that
+reason. The result rests on one dataset, one acuity profile and a backbone fitted to sharp photographs.
+
+The foveation experiment leaves a working front-end.
+The immediate open direction is replication, running the same comparison on a second adult dataset to
+show whether the dose--response reported here is a property of the mechanism or of MIT1003. Beyond it
+lies the developmental question, whether training a foveated model recapitulates, along its learning
+trajectory, the child-to-adult changes in human gaze. This front-end was built to make that question
+answerable.

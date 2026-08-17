@@ -1,0 +1,204 @@
+\chapter{Implementation and reproducibility}
+\label{app:impl}
+
+This appendix collects the implementation and reproducibility detail referred to from \chref{methods}.
+Code and result artefacts are at \url{https://github.com/W00DSRULES/bio-inspired-foveation-in-dg3}.
+Modules named below belong to the \texttt{tez\_deepgaze} package; scripts are named by file.
+
+\section{Dataset access and cross-validation}
+\label{app:data}
+
+The dataset is the \pth{MIT1003_initial_fix_consistent} variant of MIT1003, built once by
+\texttt{fetch\_mit1003.py --with-initial} and read through \texttt{pysaliency}'s
+\pth{get_mit1003_with_initial_fixation}. It returns each scanpath as a variable-length sequence with the
+forced central fixation at index~$0$. With \texttt{start\_fixation = 1} that fixation is history only
+and every free fixation is scored, the protocol of \citet{kummerer2022deepgaze3} and of \subsecref{mit1003}.
+Training and evaluation both select the variant with \texttt{--dataset-variant initial}. The plain
+\texttt{get\_mit1003} loader drops the central fixation on load, so the same \texttt{start\_fixation}
+then skips the first free fixation as well; it is not used for any number reported here.
+
+Folds are built via \texttt{pysaliency}'s \pth{filter_datasets} module with
+\pth{crossval_folds=10}, \pth{val_folds=1} and \pth{test_folds=1}.
+The splitter hardcodes \texttt{RandomState(42)} internally, so the shuffle is fixed whatever seed a
+caller passes (the \dg{} training notebook passes none), which is why the two
+partitions coincide (\subsecref{cv-split}). For each fold $k \in \{0, \ldots, 9\}$ the split has eight
+training, one validation, and one test fold.
+
+\section{Evaluator and metrics}
+\label{app:eval}
+
+\texttt{evaluate.py:run} accepts any module matching the \dg{} forward signature and never inspects its
+class, so one code path produces the pretrained baseline, the sweep tables and the stratified analysis
+alike. The per-epoch validation inside the training loop is a separate, lighter loop, pooled per fixation
+where the evaluator averages per image; it supplies only the curves of \figref{training-curves}.
+
+NSS is not taken from the \texttt{deepgaze\_pytorch} library. Its released implementation
+unpacks \texttt{torch.std\_mean} in the wrong order, so it divides the centred density by the mean where
+\eqnref{nss} divides by the standard deviation. \texttt{evaluate.py} therefore carries a local copy with
+that line corrected, and every NSS in this thesis comes from it. The pinned dependency set records the
+library version but not this substitution, so it is stated here.
+
+The centerbias is the precomputed \texttt{centerbias\_mit1003.npy} from the \dg{} release. At evaluation
+time \texttt{centerbias.py} resizes it to each stimulus by nearest-neighbour zoom and renormalises in
+log-space via \texttt{logsumexp}, so the result is a proper log-probability density summing to one over
+image pixels.
+
+\section{Consensus regions}
+\label{app:consensus}
+
+The figures of \chref{results} draw inter-subject agreement as a \emph{consensus region}: the part of
+the image that at least three-quarters of the subjects fixated within $2^\circ$ of, enclosed by a
+contour, with a second contour for the $90\%$ core. Two degrees is the foveal radius of
+\secref{foveated-vision}, so a pixel inside the region is one those subjects saw foveally. The region is
+a way of drawing agreement rather than a measure of it; the scalar the correlations of \chref{results}
+read is the entropy of \eqnref{fix-entropy}.
+
+Agreement is summarised by the \emph{consensus count map}, an array
+the shape of the image whose value at each pixel is the number of distinct subjects who fixated within
+a radius $R$ of it. For a stimulus of shape $(H, W)$, $N$ subjects, and radius $R$,
+
+\begin{equation}
+  C(y, x) \;=\; \sum_{s=1}^{N} \mathbf{1}\!\left[
+    \exists\, (x_i, y_i) \in \mathcal{F}_s \;:\; \norm{(y, x) - (y_i, x_i)} \leq R
+  \right],
+  \label{eq:consensus-count}
+\end{equation}
+
+where $\mathcal{F}_s$ is subject $s$'s fixation set and $\mathbf{1}[\cdot]$ the indicator function.
+Thresholding at fixed fractions of the subject count gives the two contours the figures draw:
+
+\begin{equation}
+  M_{0.75}(y, x) = \mathbf{1}[C(y, x) \geq \lceil 0.75 N \rceil],
+  \qquad
+  M_{0.90}(y, x) = \mathbf{1}[C(y, x) \geq \lceil 0.90 N \rceil].
+  \label{eq:consensus-masks}
+\end{equation}
+
+$N$ counts the subjects who fixated the image, so with fifteen subjects the two thresholds resolve to
+at least twelve and at least fourteen of them. The radius is $R = 70$~pixels throughout, which is
+$2^\circ$ at the MIT1003 viewing geometry.
+
+\section{Input-foveation implementation}
+\label{app:foveation}
+
+\subsection*{Where the human cutoff \texorpdfstring{$f_{c0} = 40$}{fc0 = 40} comes from}
+
+\subsecref{gp-model} takes $f_{c0} = 40$~cyc/deg as human acuity rather than the ${\sim}50$~cyc/deg
+\citet{geislerperry1998} quote in their introduction. The two figures come from different places in the
+same paper: the $50$ is a general statement of human resolution, paired with a half-acuity eccentricity of
+$2.5^\circ$, whereas the model they fitted is a contrast-threshold law,
+
+\begin{equation}
+  CT(f, e) \;=\; CT_0 \exp\!\left(\alpha f \, \frac{e + e_2}{e_2}\right).
+  \label{eq:gp-contrast}
+\end{equation}
+
+$CT$ is the faintest contrast at which a grating of spatial frequency $f$ is still visible at
+eccentricity $e$. Of its three fitted constants, $CT_0$ is that threshold at the fovea for a coarse
+grating, $\alpha$ sets how fast the threshold rises as the grating gets finer, and $e_2$ how fast it
+rises away from the fovea.
+
+The bracket $(e + e_2)/e_2$ is the eccentricity penalty, equal to one at the fovea and doubling at
+$e = e_2$. At the fovea it drops out, leaving $CT(f, 0) = CT_0 \exp(\alpha f)$.
+
+A cutoff is a frequency above which nothing is visible however the image is drawn, which is where the
+threshold reaches $CT = 1$, the maximum contrast. Setting $CT = 1$ in the foveal case and solving for
+$f$ leaves the foveal cutoff fixed by two fitted constants alone:
+
+\begin{equation}
+  f_{c0} \;=\; \frac{\ln(1/CT_0)}{\alpha}.
+  \label{eq:fc0-derivation}
+\end{equation}
+
+Solving the same way at general $e$, keeping the bracket, returns \eqnref{gp-acuity}, so the acuity law
+\secref{foveation} is built on is this fitted law rearranged rather than a second assumption.
+
+\citet{geislerperry1998} fit \eqnref{gp-contrast} to the contrast-sensitivity measurements of
+\citet{robson1981}, obtaining $\alpha = 0.106$, $e_2 = 2.3^\circ$ and $CT_0 = 1/64$, and report that the
+same $\alpha$ and $e_2$ also fit two further published contrast-sensitivity studies with a different
+minimum contrast threshold each: $CT_0 = 1/75$ for \citet{arnow1996} and $1/76$ for \citet{banks1991}.
+\eqnref{fc0-derivation} turns those three thresholds into $39.2$, $40.7$ and $40.9$~cyc/deg
+respectively, a mean of $40.3$ with a standard deviation of $0.9$. That spread is a check on how much the foveal cutoff moves when the threshold is
+measured on different subjects, not three independent refits: $\alpha$ and $e_2$ are held fixed across
+all three, and only $CT_0$ varies. The $f_{c0} = 40$ used here and the $e_2 = 2.3^\circ$ of
+\subsecref{gp-model} therefore come from the same fit.
+
+\subsection*{Viewing geometry and the pixels-per-degree constant}
+
+\subsecref{gp-model} uses $\ppd = 35$ for MIT1003. \citet{judd2009mit1003} report viewing
+\enquote{approximately two feet from a 19 inch computer screen of resolution $1280 \times 1024$}, which
+works out to $\ppd \approx 36.1$. The \dg{} release states $35$~pixels per degree for the same dataset
+\citep{deepgazepytorch}, which is the value used here.
+In pixel space $\ppd$ enters the blur only as an additive offset: substituting
+$e_{\text{deg}} = e_{\text{px}}/\ppd$ into \eqnref{gp-acuity} and \eqnref{frac-level} gives
+
+\begin{equation}
+  L(e_{\text{px}}) \;=\; \log_2 \frac{e_{\text{px}} + e_2\,\ppd}{2 f_{c0} e_2},
+  \label{eq:level-pixels}
+\end{equation}
+
+so the far field does not depend on $\ppd$ at all. By \eqnref{level-pixels} the difference between $35$
+and $36.1$ shifts the blur by at most $3\%$ in $\sigma$, and by nothing inside the sharp disc, where the
+clamp holds $L = 0$.
+
+\subsection*{Implementation}
+
+The space-variant foveation of \secref{foveation} is implemented in \texttt{foveate\_input.py}. The
+Geisler--Perry cutoff \eqnref{gp-acuity} is evaluated per pixel from the eccentricity to the current
+fixation and the pixels-per-degree constant, converted to cycles-per-pixel, and clamped at the display
+Nyquist ($0.5$~cyc/px); the fractional pyramid level \eqnref{frac-level} then indexes a Gaussian pyramid
+whose two bracketing levels are blended with triangular weights that sum to one. The pyramid is octave
+spaced: level $i$ targets a half-amplitude cutoff of $0.5 \cdot 2^{-i}$~cyc/px, which for a Gaussian of
+standard deviation $\sigma$ gives $\sigma_i = 0.375 \cdot 2^{i}$~px, and the levels are built with
+\texttt{torchvision}'s differentiable \texttt{gaussian\_blur}. The transform is geometry-preserving
+(pixels do not move), so the output is never a log-polar warp. In the gaze-contingent arms the image is
+foveated around the most recent fixation of the history before each forward pass; the pyramid is built
+once per image and reused across the fixations scored on it.
+
+\section{Training internals}
+\label{app:training}
+
+Read-out fine-tuning is implemented in \texttt{foveated\_train.py}. \pth{freeze_for_head_training} sets
+\texttt{requires\_grad=False} on the DenseNet backbone (\texttt{features}) and the finalizers and places
+every submodule in \texttt{.eval()} mode, so BatchNorm running statistics and the finalizer's two learned
+parameters, its Gaussian kernel width and its centerbias weight, stay fixed; the saliency, scanpath, and
+fixation-selection networks remain trainable.
+\texttt{audit\_trainable} asserts that every trainable parameter lies in those three read-out groups and that
+the frozen groups contribute none, raising otherwise. The arms differ only in the input handed to the
+same training routine: sharp, foveated, or foveated with the centre pinned to the image midpoint for
+every fixation.
+
+The optimiser is Adam over the read-out parameters at a base learning rate
+of $3 \times 10^{-4}$; \texttt{lr\_for\_epoch} applies the step decay of \subsecref{training-loop},
+dividing the base rate by ten at epoch five. Its milestones are absolute, at epochs five, eight and
+eleven, so the two later ones fall outside the seven-epoch schedule and never fire.
+
+One image yields about a hundred (history, target) pairs, so the per-image loss is accumulated over
+\texttt{micro\_batch} chunks before one optimiser step, and gradients are clipped to unit norm.
+
+Every epoch writes one checkpoint bundle: \texttt{weights.pt}, which holds only the trainable read-out
+tensors, since the frozen submodules stay byte-identical to the pretrained weights at every epoch,
+\texttt{optimizer.pt} with Adam's moment estimates, and a \texttt{metrics.json} sidecar. The sidecar
+records the validation log-likelihood and information gain, the seed, the git commit, and
+SHA-256 hashes of \texttt{uv.lock} (which pins every dependency, the \texttt{deepgaze-pytorch} git
+revision and the \texttt{pysaliency} release among them), the \texttt{deepgaze3.pth} weights, the
+\texttt{centerbias\_mit1003.npy} prior and the cross-validation split file, so a changed input shows as a
+hash mismatch.
+
+\section{Cluster execution}
+\label{app:cluster}
+
+\texttt{device.py:pick\_device} chooses CUDA, then MPS, then CPU. Every reported run used CUDA on the
+NVIDIA \texttt{gpu2} partition of the Goethe-NHR cluster, one Slurm job per arm and fold, from seed $42$.
+The driver \pth{foveation_pump.sh} submits the seven-arm matrix of \subsecref{arms}
+(sharp, gaze-contingent at $f_{c0} \in \{40, 20, 10\}$ and fixed-centre at the same three
+cutoffs, ten folds each, so $70$ jobs). Training was launched as
+\begin{center}
+\texttt{TEZ\_EPOCHS=7 TEZ\_DATASET\_VARIANT=initial bash} \pth{scripts/slurm/foveation_pump.sh}
+\end{center}
+and the tables of \chref{results} come from \pth{foveation_sweep_eval.sbatch}, run once per split with
+\texttt{TEZ\_EPOCH=5} and \texttt{TEZ\_DATASET\_VARIANT=initial} and scoring the checkpoints with the
+evaluator of \secref{eval-framework}; \pth{foveation_sweep_table.py} assembles
+\texttt{table.json} and \pth{make_results_figures.py} renders \tabref{phase17-arms} from it. The stratified
+diagnostics come from \pth{foveation_stratified.py} at the same epoch on the validation split, and the
+per-image diagnostic from \texttt{per\_image\_diagnostic.py --n-stim 1003 --dataset-variant initial}.

@@ -1,0 +1,114 @@
+\chapter{Discussion}
+\label{ch:discussion}
+
+\section{The foveation result}
+\label{sec:disc-finding}
+
+Gaze-contingent input foveation at human acuity costs nothing measurable. The difference at
+$f_{c0} = 40$ is at most $0.0071$~bits per fixation, under $1\%$ of what the sharp control gains over the
+centerbias, and a loss appears once the blur is pushed past human acuity (\subsecref{results-arms}). At
+the coarse cutoffs the map-level diagnostics assign the loss to spreading rather than to mislocation, the
+maps carrying more entropy at $f_{c0} = 20$ and $10$ while AUC moves by at most $0.002$
+(\subsecref{results-diagnostics}).
+
+At human acuity the foveation removed nothing the fit depended on measurably. At the coarser cutoffs it
+did. The model draws on detail the coarser blur removes, by about $2\%$ of its gain over the centerbias at
+$f_{c0} = 10$, and the per-fixation cost deepens with saccade amplitude (\figref{stratified-amplitude}); the measured cost is an
+upper bound on what the discarded detail was worth, provided the frozen backbone --- fitted to sharp
+photographs --- is no better on foveated input than on sharp. Nothing here tests that; unfreezing the
+backbone would (\secref{disc-limits}).
+
+The fixed-centre arms separate degrading the periphery from letting the sharp region follow the gaze.
+With the same blur held at the image centre, the arm sits below the gaze-contingent one at every cutoff,
+and the difference between the two, the gaze-contingency term, grows from $0.003 \pm 0.003$~bits at
+$f_{c0} = 40$ to $0.013 \pm 0.004$ at $10$ (\subsecref{results-gaze-contingency}). Degrading the periphery is what costs, and letting the sharp
+region follow the gaze gives part of that cost back. What produces that return is not established.
+
+\dg{}'s authors put a related question to the read-out (\secref{position}) and found that \enquote{the
+distance to the fovea plays only a minor role for guiding free-viewing gaze on average}
+\citep{kummerer2022deepgaze3}. Those variants were fed the same
+sharp image, so the test held the available information fixed. The result here is the input-level
+counterpart. At human acuity, changing the information itself leaves performance where it was, within
+what this design can measure.
+
+\section{The per-image diagnostic}
+\label{sec:disc-per-image}
+
+\dg{}'s fit varies more from image to image than any arm differs from another, and that variation
+follows how far the fifteen subjects spread (\secref{results-per-image}). \subsecref{stats-plan} takes every difference inside an image for that
+reason, and the diagnostic characterises what the pairing removes. Part of that spread belongs to the
+metric (\secref{results-per-image}), so a low per-image score is not on its own evidence that the model
+failed there.
+
+\section{Limitations}
+\label{sec:disc-limits}
+
+Several limitations bound what the comparison resolves and how far the result reaches.
+
+\begin{itemize}
+  \item \emph{The backbone is frozen.} The features every arm reads were learned on sharp photographs,
+    and only the read-out adapts to the foveated input. Unfreezing part of the backbone, or training it
+    on foveated input from the start, is untested (\secref{disc-future}).
+  \item \emph{The evaluation is scored on human scanpaths.} Every history the model conditions on is a
+    human scanpath and every scored location is a human fixation (\subsecref{metrics}), so the foveated
+    model's sharp region always sits where a subject was looking, and the model never has to find a target
+    with its own degraded periphery. What the comparison measures is the value of peripheral detail for
+    predicting the next human fixation from a human history. Whether a foveated model would produce
+    human-like scanpaths on its own is a separate question this design does not ask.
+  \item \emph{Native resolution is a shift for the backbone.} \dg{} was released fitted on resized
+    stimuli, and the arms here read each stimulus at its own size so that the sharp region stays a disc
+    (\subsecref{gp-model}). Every arm carries that shift equally, so it is not a difference between
+    them, and nothing here tests whether it interacts with the foveation.
+  \item \emph{Faithful foveation is mild on lab-sized images.}
+    Because acuity falloff is set in degrees and an MIT1003 stimulus spans $29^\circ$ along its long
+    side, the foveation at the human setting leaves a third of all saccade targets untouched.
+    Differences large enough to read off without ten-fold pairing appear only at coarser-than-human
+    strengths, so the argument rests on the shape of the dose--response and on the fixed-centre contrast
+    rather than on the size of any single point.
+  \item \emph{A single dataset.} All results are on MIT1003 free-viewing by adults; other datasets and
+    tasks (visual search, other populations) may behave differently.
+  \item \emph{Fifteen subjects, thinly described.} MIT1003 provides fifteen subjects for every
+    image, described in a single sentence as males and females aged between 18 and 35
+    \citep{judd2009mit1003}. Each likelihood in \chref{results} is therefore measured against those
+    fifteen people rather than against the expected value more subjects would estimate, and age is
+    given only as that range, while first language and script direction are not recorded at all, so
+    none of them can be controlled for.
+  \item \emph{The falloff shape is fixed.} Every foveated arm inherits the same half-acuity eccentricity
+    $e_2 = 2.3^\circ$ (\subsecref{gp-model}). Human-strength here means human-strength for
+    one acuity profile, and the thesis does not test others.
+  \item \emph{The mechanism models acuity falloff only.} Resolution is not the only peripheral limit. An
+    object resolvable in isolation becomes hard to identify when others lie near it, \emph{crowding}
+    \citep{strasburger2011peripheral}, so degrading peripheral resolution reproduces part of peripheral
+    vision and not all of it.
+  \item \emph{Fixation duration is not represented.} \dg{} takes fixation coordinates only
+    \citep{kummerer2022deepgaze3}, so if foveating the input changed how long subjects dwelled at each
+    location without changing which locations they chose, this evaluation would not register it.
+\end{itemize}
+
+\section{Future work}
+\label{sec:disc-future}
+
+The most direct extension is replication. Every number reported here comes from one dataset, so the
+dose--response of \secref{results-foveation} may be a property of the mechanism or a property of MIT1003.
+Running the same arms and the same $f_{c0}$ sweep on a second dataset of adult free-viewing gaze would
+separate the two. The evaluator already accepts any model matching the \dg{} forward signature
+(Appendix~\ref{app:eval}), so the work is a loader and a centerbias fitted to the new stimuli
+(\subsecref{metrics}). The dataset must record its viewing geometry, because without pixels-per-degree
+the two cannot be foveated at a matched strength in degrees (\subsecref{gp-model}), leaving display
+scale confounded with foveation.
+
+Unfreezing part of the backbone would separate the detail the foveation discards from the DenseNet's
+unfamiliarity with blurred input, which the cost at the coarse cutoffs mixes (\secref{disc-limits}).
+Compute kept it out of scope, and it would change what the comparison measures, since a difference
+between arms would then include what each backbone learned from its own input.
+
+The longer-range question is developmental, whether a model's \emph{learning trajectory} recapitulates
+the development of human gaze, which changes measurably with age
+\citep{helo2014maturation, acik2010developmental}. This thesis makes no claim that a read-out's training
+trajectory resembles that development; the front-end makes the comparison possible, and testing it needs
+a developmental eye-tracking dataset that records its viewing geometry, which the replication above also
+requires.
+
+Smaller extensions follow from constraints already stated. A transformer host would test whether the dose--response
+survives a change of generator (\secref{position}). A duration channel would let the evaluation register
+a change in dwell time (\secref{disc-limits}).

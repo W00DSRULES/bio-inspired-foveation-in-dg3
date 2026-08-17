@@ -1,0 +1,140 @@
+\chapter*{List of Vocabulary}
+\addcontentsline{toc}{chapter}{List of Vocabulary}
+
+The terms this thesis uses in a fixed sense, with the meaning each one carries throughout.
+
+\begin{description}
+
+\item[Arm] One condition of the experiment, run on one kind of input. The arms are identical in
+  everything else, so a difference between them comes from the input.
+
+\item[AUC] Area under the curve. The probability that the model ranks a fixated pixel above a pixel drawn
+  at random from the same image. It measures ranking alone, so any rescaling of the map leaves it
+  unchanged.
+
+\item[Backbone] The frozen DenseNet-201 that turns an image into features. Pretrained for object
+  recognition and never updated here.
+
+\item[Centerbias] The fixed prior map of where fixations fall irrespective of image content.
+  Free-viewing gaze concentrates near the centre of the stimulus, and information gain is measured
+  against this prior.
+
+\item[Consensus region] The part of an image that at least a given fraction of the subjects fixated
+  within $2^\circ$ of. The figures draw it as a contour to show where the population agreed; it is
+  not one of the reported measures.
+
+\item[Cortical magnification] The disproportionate share of visual cortex given to the central visual
+  field.
+
+\item[Crowding] The failure to identify an object in peripheral vision when other objects lie close to
+  it, even where the object on its own would be resolvable.
+
+\item[\dg{}] DeepGaze III, the model this thesis modifies. Given an image and the recent fixations it
+  returns a probability map for the next fixation.
+
+\item[Dose--response] Ordering the arms by foveation strength to see whether a cost grows with it,
+  rather than testing one strength on its own.
+
+\item[Eccentricity] Angular distance from the point of gaze, in degrees of visual angle. Acuity falls as
+  it grows.
+
+\item[Epoch] One pass of training over every training image.
+
+\item[Fixation] A period during which gaze rests at one location. Every metric here is computed per
+  fixation.
+
+\item[Fixation entropy $H_{\text{fix}}$] How spread out the subjects' fixations were on one
+  image: the entropy of their pooled fixation counts over a $16 \times 16$ grid, normalised to
+  $[0, 1]$. It describes the people, not the model, and is the per-image dispersion measure this
+  work reports. Distinct from map entropy, which describes one prediction.
+
+\item[Fold] One of ten partitions of the dataset into training, validation and test images. Every
+  scanpath of an image lands in the same fold, so a test image is never seen during training.
+
+\item[Fovea] The small central region of the retina with the highest receptor density, covering about
+  two degrees.
+
+\item[Foveal cutoff $f_{c0}$] The highest spatial frequency resolvable at the centre of gaze, in cycles
+  per degree. It sets the strength of the foveation, and the human value is about $40$.
+
+\item[Foveation] Reducing image resolution with distance from the point of gaze, in imitation of the
+  eye.
+
+\item[Free viewing] Looking at an image with no specific target or task given.
+
+\item[Gaze-contingency term] The difference between the gaze-contingent and the fixed-centre arm at the
+  same foveal cutoff. Both carry the identical blur, so the term is what following the gaze contributes
+  with the amount of blur held constant.
+
+\item[Gaze-contingent] Re-centred on the current fixation before every forward pass, so the sharp region
+  follows the gaze.
+
+\item[Information gain (IG)] Log-likelihood measured against the centerbias rather
+  than against a uniform map, in bits per fixation. Zero means the model adds nothing beyond the tendency
+  to look near the centre. $\Delta \IG$ is the difference in information gain between two arms scored on
+  the same fixations.
+
+\item[Inhibition of return] The reduced likelihood of gaze returning to a location fixated recently.
+
+\item[Log-likelihood (LL)] The probability the model assigned to the fixations the subjects made, in
+  bits per fixation against a uniform map.
+
+\item[Map entropy] The entropy $-\sum p \log_2 p$ of a predicted probability map, summed over its pixels
+  and reported in bits. It measures how widely the model spreads its density, irrespective of where the
+  peak sits.
+
+\item[MIT1003] An eye-tracking dataset of 1003 natural images, each freely viewed for three seconds
+  by up to fifteen subjects while eye position was recorded.
+
+\item[Mode distance] The distance in pixels from the peak of the predicted probability map to the true
+  fixation.
+
+\item[NSS] Normalised scanpath saliency. The predicted value at fixated pixels once the map has been
+  rescaled to zero mean and unit standard deviation.
+
+\item[Nyquist frequency] The highest spatial frequency a sampled image can carry, half its sampling
+  rate. Blur that removes only frequencies above it leaves the stored image unchanged.
+
+\item[Paired difference] A comparison taken between two arms on the same fold and the same fixations, so
+  that variation in image difficulty cancels.
+
+\item[Pearson's $r$] The correlation between two per-image quantities read from their values, measuring
+  how closely the pairs sit on a straight line.
+
+\item[Pixels per degree ($\ppd$)] How many image pixels span one degree of visual angle at the viewing
+  geometry. It converts the acuity model from degrees to pixels, and is $35$ for MIT1003.
+
+\item[Priority map] A map of where attention should be directed, combining stimulus-driven salience with
+  task and history.
+
+\item[Probability map] \dg{}'s output, the probability at each pixel that the next fixation lands there.
+
+\item[Read-out] The three small trainable networks above the frozen backbone (the released model carries ten copies of them, averaged). They are the only part
+  fine-tuned here.
+
+\item[Saccade] The rapid eye movement between two fixations. Vision is suppressed while it happens.
+
+\item[Saliency map] A map of how conspicuous each image location is on stimulus properties alone.
+
+\item[Scanpath] One subject's fixations on one image, in the order they were made.
+
+\item[Sharp] Not foveated. The input the control arm receives.
+
+\item[Sharp radius] The eccentricity out to which the foveated frame stays identical to the original,
+  because the eye out-resolves the display there.
+
+\item[Space-variant] Applying a different amount of blur at each pixel rather than one amount to the
+  whole frame.
+
+\item[Spatial priority network] \dg{}'s own name for the read-out component that turns backbone features
+  into a stimulus-driven map.
+
+\item[Spearman's $\rho$] Pearson's correlation computed on ranks, each value replaced by its position
+  among the 1003 stimuli, so it asks only whether the two orderings agree.
+
+\item[Subject] One of the fifteen people whose gaze MIT1003 recorded.
+
+\item[Validation split] The fold used to choose the learning rate, check that training behaved, and
+  compute the diagnostics. It is distinct from the test fold, which carries the main comparison.
+
+\end{description}

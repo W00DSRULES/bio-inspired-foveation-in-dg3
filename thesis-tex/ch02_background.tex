@@ -1,0 +1,418 @@
+\chapter{Background}
+\label{ch:background}
+
+% Background covers foveated vision, the saliency/scanpath lineage, foveated models and the
+% \dg{} architecture. Dataset and metrics are defined where first used in \chref{methods};
+% subject differences, including age, are in \chref{discussion}.
+
+This thesis asks what happens to a model of where people look next when it is made to see the scene with
+the resolution falloff of a human eye.
+
+\section{Foveated vision}
+\label{sec:foveated-vision}
+
+Human vision is not uniform across the visual field. Acuity is highest at the \emph{fovea}, a region
+roughly $2^\circ$ of visual angle in radius around the point of gaze, and falls off steeply with distance
+from it into the periphery \citep{strasburger2011peripheral}. Only a small patch of any scene is seen
+sharply at any instant.
+
+This is why the eyes move. Looking at a scene is a cycle of \emph{fixations}, during which the eye is
+nearly still and visual information is taken in, separated by \emph{saccades}, the fast jumps between
+them, during which little is seen \citep{rayner1998eye}. Where to look next has to be chosen from what the
+blurred periphery shows, together with memory of what was already inspected \citep{henderson2003gaze}.
+\citet{najemnik2005} showed that human search is close to a Bayesian ideal observer that picks each
+saccade to maximise the probability of finding the target, weighing every candidate fixation by what the
+eccentricity-dependent visibility map would reveal from there.
+\figref{one-fixation} shows one image sharp and at two foveation strengths.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{background/one_fixation.png}
+  \caption[One image, sharp and foveated]{One image from MIT1003 \citep{judd2009mit1003}, sharp and foveated at two strengths, at the dataset's $35$ pixels per degree.
+    The red cross is the fixation and the yellow box the patch magnified below. The dashed circle in
+    B, of radius $3^\circ$, encloses the region the blur leaves untouched (\subsecref{sharp-radius});
+    at $f_{c0} = 10$ no such region is left.}
+  \label{fig:one-fixation}
+\end{figure}
+
+Detail is measured in cycles per degree, the number of repeats of a pattern that fit into one degree of
+visual angle (a thumb held at arm's length covers about two degrees). The more repeats fit into that
+degree, the finer the detail, and blurring an image removes the finest.
+
+This thesis models the falloff as a cutoff spatial frequency that falls with eccentricity, following
+\citet{geislerperry1998}, discarding at every point in the image the detail finer than the cutoff for
+that eccentricity. The model folds into one curve the coarser retinal
+sampling away from the fovea \citep{curcio1990photoreceptor} and the shrinking cortical area per degree
+of visual field, called \emph{cortical magnification}
+\citep{daniel1961representation, strasburger2011peripheral}. It
+also treats the falloff as identical in every direction, whereas measured acuity differs between
+directions in the visual field (\figref{retinal-falloff}). The shape of the falloff is set by one parameter, $e_2$, the eccentricity at which
+the cutoff has halved. \chref{methods} uses $e_2 = 2.3^\circ$, the value \citet{geislerperry1998} fitted to human
+contrast-sensitivity measurements.
+The \citet{geislerperry1998} model is used here because one number sets its strength, the cutoff at the
+point of gaze, $f_{c0}$, in cycles per degree. That number can be set to the human value, and below it to degrade
+the periphery further than an eye does.
+The blur models the loss of resolution only. Peripheral vision also loses in other ways, among them
+crowding, the failure to identify an object when others lie close to it \citep{rosenholtz2016peripheral},
+which the model leaves out (\secref{disc-limits}).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{background/retinal_falloff.png}
+  \caption[The acuity model against measured falloff]{The model of \chref{methods} against the falloff it simplifies. The coloured curves are what
+    \citet{watson2014formula}'s ganglion-cell density fit implies along the four directions out from
+    the fovea; the dashed one is the Geisler--Perry cutoff used here, falling more slowly because it is
+    fitted to what a subject can see rather than to what the retina samples.}
+  \label{fig:retinal-falloff}
+\end{figure}
+
+\section{Saliency and scanpath models}
+\label{sec:models}
+
+A \emph{saliency map} is the spatial distribution of fixations; a \emph{scanpath} is their order. Both are
+targets a gaze model can be asked to predict, and \figref{saliency-vs-scanpath} shows the same data under
+each reading. \dg{} shows the two are not exclusive, computing a saliency map and using it to predict the next
+fixation in a scanpath, but they still set different problems.
+
+A saliency map can be built from the data itself, by collecting every fixation many subjects made on an
+image and smoothing them together (\figref{saliency-vs-scanpath}A).
+
+Scanpaths cannot be built that way. A saliency map has one value per pixel, and every recorded fixation
+is evidence about one of them. A scanpath is an ordered sequence, so the same counting would need
+evidence about each sequence a subject might produce; the number of possible sequences grows with their
+length, while a dataset holds a handful per image. A scanpath model
+therefore has to compute the next fixation from the image and the fixations so far, rather than look it
+up.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{background/saliency_vs_scanpath.png}
+  \caption[A saliency map and one scanpath]{One MIT1003 image \citep{judd2009mit1003} under the two readings. \textbf{A.} Every fixation of
+    all fifteen subjects, smoothed into a density, with order discarded. \textbf{B.} One subject's
+    fixations, numbered in viewing order.}
+  \label{fig:saliency-vs-scanpath}
+\end{figure}
+
+The models below use \emph{saliency map} in a second, mechanistic sense, as bottom-up conspicuity computed
+from the image alone, where a region stands out because it differs from its surroundings in contrast,
+colour or orientation. The brain is thought to select saccade targets from a \emph{priority}
+map, that same image-driven signal plus whatever the viewer's goals make relevant and a memory of
+where they have already looked \citep{fecteau2006salience, zelinsky2015priority}.
+\figref{dg3-composition} shows the two maps \dg{} adds to predict one fixation. Its probability map
+has the image-driven signal and a memory of the fixations already made, and
+\figref{history-conditioning} shows that memory changing the prediction as the history grows. The
+goals have no counterpart in it, because the subjects of MIT1003 viewed each image freely with no
+task set.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{background/dg3_composition.png}
+  \caption[\dg{} composing one prediction]{\dg{} given the first four fixations of one subject (drawn). \textbf{A.} The read-out's map,
+    from the image and those fixations together. \textbf{B.} The centerbias (\secref{dg3-arch}),
+    scaled by the weight the model learned. \textbf{C.} Their sum in log units, normalised. A and C
+    share a colour scale; B carries its own.}
+  \label{fig:dg3-composition}
+\end{figure}
+
+\dg{} reuses the convolutional read-out of the static DeepGaze line and adds conditioning on fixation
+history, joining the two lines \figref{lineage} traces.
+
+\begin{figure}[tbp]
+  \centering
+  \begin{tikzpicture}[
+    seed/.style  = {draw, rounded corners=2pt, fill=black!8, align=center,
+                    font=\footnotesize, text width=22mm, minimum height=12mm},
+    sal/.style   = {draw, rounded corners=2pt, fill=blue!12, align=center,
+                    font=\footnotesize, text width=22mm, minimum height=12mm},
+    scan/.style  = {draw, rounded corners=2pt, fill=green!14, align=center,
+                    font=\footnotesize, text width=22mm, minimum height=12mm},
+    host/.style  = {draw, very thick, rounded corners=2pt, fill=blue!25, align=center,
+                    font=\footnotesize\bfseries, text width=24mm, minimum height=14mm},
+    flow/.style  = {-{Latex[length=2.2mm]}, thick},
+    graft/.style = {-{Latex[length=2.2mm]}, densely dashed, thick, gray},
+    lane/.style  = {font=\scriptsize\bfseries\itshape, anchor=center},
+  ]
+    % --- lane labels ---
+    \node[lane] at (2.9, 5.0)  {static saliency};
+    \node[lane] at (2.9, 2.0)  {scanpath generation};
+
+    % --- root ---
+    \node[seed] (r1) at (0.0, 2.5) {Feature-integration\\ theory (1980);\\ saliency map (1985)};
+
+    % --- static-saliency lineage ---
+    \node[sal]  (s1) at (2.9, 4.0)  {Itti--Koch (1998)};
+    \node[sal]  (s2) at (5.8, 4.0)  {GBVS, AIM, SUN\\ (2006--09)};
+    \node[sal]  (s3) at (8.7, 4.0)  {DeepGaze I--IIE\\ (2015--21)};
+
+    % --- scanpath-generation lineage ---
+    \node[scan] (p1) at (2.9, 1.0)  {winner-take-all\\ + inhibition of\\ return (1998)};
+    \node[scan] (p2) at (5.8, 1.0)  {saccadic models\\ (2015)};
+    \node[scan] (p3) at (8.7, 1.0)  {deep path samplers\\ (2017--20)};
+
+    % --- confluence and what follows ---
+    \node[host] (dg) at (11.9, 2.5) {DeepGaze III (2022)\\ density over the\\ next fixation};
+    \node[scan] (nx) at (11.9,-1.0) {transformer \&\\ diffusion (2023--25)};
+
+    % --- succession within the two lineages ---
+    \draw[flow] (r1) -- (s1);
+    \draw[flow] (r1) -- (p1);
+    \draw[flow] (s1) -- (s2);   \draw[flow] (s2) -- (s3);
+    \draw[flow] (p1) -- (p2);   \draw[flow] (p2) -- (p3);
+
+    % --- where the lineages meet ---
+    \draw[flow]  (s3) -- (dg);
+    \draw[flow]  (p3) |- (nx.west);
+    \draw[graft] (p3) -- (dg);
+    \draw[graft] (dg) -- (nx);
+  \end{tikzpicture}
+  \caption[Two lines of work, and where they meet]{Static saliency learns where people look on average; scanpath generation produces the order.
+    \dg{} inherits the frozen-backbone read-out of the first and the history conditioning of the
+    second. Solid arrows mark descent, dashed ones an idea carried across lines.}
+  \label{fig:lineage}
+\end{figure}
+
+\subsection{From hand-crafted saliency to learned features}
+\label{subsec:saliency-lineage}
+
+\citet{treisman1980feature} set out the picture later models inherit. Simple
+visual features are registered across the whole field at once, and attention is then
+directed to one location at a time. Guided Search added that the second stage is steered
+by the first rather than deployed blindly \citep{wolfe1989guided}.
+\citet{koch1985shifts} turned Treisman's account into a mechanism whose parts are still in use: the
+feature maps are combined into one topographic \emph{saliency map}, a winner-take-all
+network selects its peak, and inhibiting that location briefly --- what was later named
+\emph{inhibition of return} --- lets the next-most-active one win. They describe shifts of
+attention rather than eye movements, but this is how later models read an ordered
+sequence of fixations off a single map, as \citet{itti1998saliency} first implemented.
+
+These are \emph{hand-crafted} models, in which a person chooses which features to compute and how
+to weight them, and nothing is fitted to eye-tracking data. Because the
+result emits both a map and a path, it is at once a saliency model and a saccade
+generator. Later hand-crafted models kept the architecture and varied how activation
+on the map was computed \citep{harel2006gbvs, bruce2009saliency, zhang2008sun}.
+
+Deep Gaze~I \citep{kummerer2015deepgaze1} took the ImageNet feature maps of
+\citet{krizhevsky2012alexnet}, left them untouched, and fitted only a small read-out on top
+of them to human fixations. It reported the best results on the MIT Saliency Benchmark at the
+time, without a face or text detector anywhere in the model, because the semantic content that draws
+fixations was already in the features, which hand-crafted models had to supply through
+purpose-built detectors. That fixed the recipe
+the whole line then followed, and the one used here, freezing a pretrained network's
+features and training only a small read-out on top of them
+\citep{kummerer2016deepgaze2, linardos2021deepgaze2e}. Every model in this line,
+hand-crafted or learned, emits a single static map, predicting \emph{where} fixations
+land but not their order.
+
+\subsection{Scanpath-prediction models}
+\label{subsec:scanpath-lineage}
+
+Scanpath models predict the fixation sequence itself. The earliest is the winner-take-all
+with inhibition of return of \subsecref{saliency-lineage}, but it always jumps to the
+current peak, so it produces one fixed path per image and reproduces neither the
+variability of human gaze nor its \emph{oculomotor} regularities (how far and in which
+direction people tend to move their eyes, independently of what the image contains). Those
+regularities predict fixation locations at least as well as image salience does
+\citep{tatler2009prominence}. Le~Meur and Liu built them in directly, drawing candidates from the saliency map
+\emph{reweighted} by the measured human saccade amplitude and direction distributions and by a memory
+term that suppresses locations just visited, rather than always taking the peak
+\citep{lemeur2015saccadic}.
+
+Deep models learn the dynamics instead, from saliency volumes sampled over time
+\citep{assens2017saltinet} to \emph{inverse reinforcement learning} for goal-directed search
+\citep{yang2020predicting}, which infers from human search paths what reward those paths were
+maximising and then acts on it. These differ in machinery but all emit paths rather than a probability
+for an observed fixation, so they are scored by how closely a sampled path resembles a human
+one, through order-alignment metrics such as ScanMatch \citep{cristino2010scanmatch} and Sequence Score
+\citep{yang2020predicting}.
+\citet{kummerer2021state} show that path-to-path similarity can rank a \emph{wrong} model above the
+true generating distribution. Human scanpaths on one image disagree with each other
+(\figref{scanpath-variability}), so any single human path
+is one draw from a broad distribution, and so is any single model path. Two draws from
+the same distribution routinely look unalike, while a model that collapses onto one
+stereotyped path can resemble each individual
+human more closely than another human does. Scoring the density instead asks how much probability the
+model placed where people looked, which variability cannot distort in that direction.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{background/scanpath_variability.png}
+  \caption[Scanpath variability between subjects]{The first five of the fifteen subjects on two stimuli, each panel one subject's fixations in
+    viewing order with the first in white. \textbf{Top:} the same object, in different orders and
+    with different fixation counts. \textbf{Bottom:} a dispersed stimulus, where the fixations land
+    on different parts of the image from subject to subject.}
+  \label{fig:scanpath-variability}
+\end{figure}
+
+\dg{} \citep{kummerer2022deepgaze3} closes that gap. Instead of producing a path, it produces a
+probability for every location the next fixation could land on, given the image and the fixations so
+far. That probability can be read at the place a person looked, so the model is scored on what it
+predicted there rather than on how closely one of its paths resembles one of theirs. It is the model this thesis instruments, and \chref{methods} describes how it
+is built. \figref{history-conditioning} shows what conditioning on the history does to the prediction.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{demos/priority_evolution/priority_evolution_stim0091.png}
+  \caption[Conditioning on fixation history]{The probability map \dg{} predicts after $1$, $3$ and $4$ fixations of one subject's scanpath,
+    with that scanpath overlaid. The path is the subject's, not a model sample, so each panel is where
+    the model expected that subject to go next, and the gap between the two is what the likelihood of
+    \subsecref{metrics} measures.}
+  \label{fig:history-conditioning}
+\end{figure}
+
+\subsection{Current state (2023--2025)}
+\label{subsec:contemporary}
+
+Transformers \citep{vaswani2017attention, dosovitskiy2021vit} and diffusion models
+\citep{ho2020ddpm} became standard tools across computer vision, and scanpath researchers
+took them up as they arrived.
+
+Gazeformer predicts
+goal-directed search attention with a transformer that encodes the search target
+through a language model, which lets it generalise to targets never seen in training
+\citep{mondal2023gazeformer}. HAT unifies top-down search and bottom-up free-viewing
+in a single transformer, predicting a dense heat-map per fixation where earlier models chose
+from a coarse grid of cells; it is also the only model in this section with an explicit foveal
+mechanism, which \secref{foveated-models} takes up \citep{yang2024hat}. EyeFormer uses a transformer policy trained by
+reinforcement learning and adds personalisation, adapting to a handful of scanpaths from one subject
+\citep{jiang2024eyeformer}. TPP-Gaze models fixation position and \emph{duration} jointly with neural
+temporal point processes \citep{damelio2025tppgaze}, so a fixation's timing is a distribution. The
+model here leaves timing out. ScanDiff uses a
+diffusion model to generate \emph{diverse} scanpaths, taking the spread of plausible
+paths as the thing to predict \citep{cartella2025scandiff}.
+
+The transformer backbones carry a data cost. A transformer has none of the locality and translation
+equivariance a convolution builds in, so it has to learn them, and \citet{dosovitskiy2021vit} report that
+their model generalises worse than a comparable convolutional network when trained on ImageNet alone
+and overtakes it only after pretraining on a dataset an order of magnitude larger. Several of the models
+above are built for visual search rather than free viewing, a difference \secref{position} returns to.
+
+\section{Foveated models}
+\label{sec:foveated-models}
+
+Most deep saliency and scanpath models read the whole image at uniform resolution. The few that
+reintroduce a fovea differ in \emph{where} they attach it, and the subsections below take those places
+in pipeline order.
+
+\subsection{At the input}
+\label{subsec:fov-input}
+
+Input-space models degrade the image before the network sees it, by resampling or by blurring.
+
+\emph{Resampling} takes closely
+spaced samples near the fovea and progressively sparser ones outward, as the retina's own receptors are
+spaced. Laying those samples back out on an even grid magnifies the centre and squeezes the periphery, so
+straight lines bend and a pixel no longer sits where it came from. \citet{dacosta2024retinal} apply this
+to a recognition network rather than a gaze model, but the transform is the same one a foveated gaze
+model would inherit.
+
+A space-variant \emph{blur} leaves every pixel exactly where it was and changes only
+how sharp the picture is there, as SemBA-FAST does for semantic search \citep{luzio2025semba}. The search
+model of \citet{yang2020predicting} uses a two-level version of the same idea, a sharp patch at the
+fixation laid over a blurred copy of the whole frame. This thesis is input-space and uses the blur.
+
+STAR-FC \citep{wloka2018starfc} is the closest prior work, the one input-space model that foveates for
+free viewing, the task studied here. It re-applies a retinal transform at each new fixation and takes the
+next fixation as the maximum of a priority map built from conspicuity and a history of visited locations.
+It selects that maximum rather than emitting a density, so it emits ordered sequences and cannot be
+scored by likelihood (\tabref{model-capabilities}). Its transform is the same space-variant blur, applied
+anisotropically where the falloff here is identical in every direction. STAR-FC then splits the blurred
+frame, running a low-level saliency algorithm over the periphery and a deep network over the centre; the
+model here reads the whole foveated frame with one network.
+
+\subsection{At the features}
+\label{subsec:fov-features}
+
+Feature-space models act on the network's internal representations. HAT reads
+them at two resolutions, coarse over the whole frame and fine at each fixation, in what its authors call
+a \enquote{simplified foveated retina} \citep{yang2024hat}. Because that stage sits \emph{after} the backbone,
+the backbone still receives every detail, and the constraint governs only how the resulting features are
+pooled.
+
+\subsection{At the decision}
+\label{subsec:fov-decision}
+
+The SceneWalk lineage \citep{engbert2015scenewalk, schwetlick2019ccn, schwetlick2023diss} constrains the
+selection step itself. SceneWalk drives its attention map by saliency
+multiplied by a Gaussian window centred on the current gaze (\enquote{spatially-limited (foveated)
+access}, so detail near fixation contributes more than the periphery), and subtracts a second map that
+builds up at visited
+locations to produce inhibition of return. Because the model emits a density, its parameters can be
+fitted and its variants compared by likelihood \citep{schuett2017likelihood}, the same footing \dg{} is
+evaluated on here.
+
+The window weights the saliency signal inside a cognitive dynamical model, so the image is never
+degraded and only the weight of each location in the decision changes.
+
+\tabref{model-capabilities} puts the models of this chapter side by side.
+
+\begin{table}[tbp]
+  \centering
+  \caption[What the models of this chapter predict, and where they foveate]{The models of this chapter,
+    in order of publication, each name carrying the citation it is discussed under.
+    \emph{Predicts} separates a
+    single static map per image from an ordered sequence. \emph{Likelihood} marks the models that assign
+    a probability to each observed fixation; the rest emit sampled paths and are compared by how
+    closely a path resembles a human one (\subsecref{scanpath-lineage}). \emph{Foveation} names the
+    stage at which a model imposes an eccentricity-dependent
+    resolution limit, and \emph{follows gaze} marks the ones that re-centre that limit on the current
+    fixation.}
+  \label{tab:model-capabilities}
+  \footnotesize
+  \setlength{\tabcolsep}{2.5pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    model & task & predicts & likelihood & foveation & follows gaze \\
+    \midrule
+    Itti--Koch \citeyearpar{itti1998saliency}     & free viewing         & where + order & ---        & ---      & ---        \\
+    Le~Meur \& Liu \citeyearpar{lemeur2015saccadic} & free viewing       & where + order & ---        & ---      & ---        \\
+    SceneWalk \citeyearpar{engbert2015scenewalk, schwetlick2019ccn} & free viewing & where + order & \checkmark & decision & \checkmark \\
+    DeepGaze I--IIE \citeyearpar{kummerer2015deepgaze1, linardos2021deepgaze2e} & free viewing & where & \checkmark & ---      & ---        \\
+    SaltiNet \citeyearpar{assens2017saltinet}     & free viewing         & where + order & ---        & ---      & ---        \\
+    STAR-FC \citeyearpar{wloka2018starfc}         & free viewing         & where + order & ---        & input    & \checkmark \\
+    Yang et al.\ \citeyearpar{yang2020predicting} & search               & where + order & ---        & input    & \checkmark \\
+    \dg{} \citeyearpar{kummerer2022deepgaze3}     & free viewing         & where + order & \checkmark & ---      & ---        \\
+    Gazeformer \citeyearpar{mondal2023gazeformer} & search               & where + order & ---        & ---      & ---        \\
+    HAT \citeyearpar{yang2024hat}                 & free viewing, search & where + order & \checkmark & features & \checkmark \\
+    EyeFormer \citeyearpar{jiang2024eyeformer}    & free viewing         & where + order & ---        & ---      & ---        \\
+    SemBA-FAST \citeyearpar{luzio2025semba}       & search               & where + order & \checkmark & input    & \checkmark \\
+    TPP-Gaze \citeyearpar{damelio2025tppgaze}     & free viewing         & where + order & \checkmark & ---      & ---        \\
+    ScanDiff \citeyearpar{cartella2025scandiff}   & free viewing, search & where + order & ---        & ---      & ---        \\
+    \midrule
+    this thesis                  & free viewing         & where + order & \checkmark & input    & \checkmark \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Position of this thesis}
+\label{sec:position}
+
+\dg{}'s own authors raised the absence of foveation. Introducing the model,
+\citet{kummerer2019ccn} write that \enquote{one might argue that our model is limited by the
+fact that it is not foveated}. They answered it in the same paper and again in the journal version, at
+the read-out, where several spatial priority channels do not perform substantially better than one
+\citep{kummerer2019ccn, kummerer2022deepgaze3}. The input
+was sharp in every variant, so what a foveated input does was left open, and it is the gap this thesis
+occupies.
+
+The successors of \subsecref{contemporary} change the generator (transformer,
+diffusion, point process), and what they add over \dg{} is reach: a fixation history
+without a fixed window, image regions that interact without depth, and in TPP-Gaze's case
+fixation durations. The mechanism of \chref{methods} attaches ahead of the backbone, so it is
+compatible with any of them.
+
+Free viewing removes the goal input to target selection (\secref{models}), though not the subject's
+contribution altogether, since faces, text and people are fixated more than image contrast predicts
+\citep{judd2009mit1003}. Constraining what the stimulus delivers therefore bears directly on this task,
+in a way it plausibly would not on search, where a model could still reason about where the target ought
+to be.
+
+The last row of \tabref{model-capabilities} pairs input foveation that follows gaze with free viewing
+and a likelihood score, which no row above combines.
+
+That fixes what the experiment asks of the model. \dg{} is trained and evaluated on input no human
+subject could receive, with every pixel sharp, including the ones far enough from the modelled gaze that a
+person would see only a blur. Restricting the input to what a foveated subject could resolve asks
+whether that detail carries any of the model's fit to human fixations, and degrading the periphery
+further asks how much the model draws on the coarse peripheral signal a viewer chooses saccades from
+\citep{najemnik2005}; if it does, the cost should grow as the falloff steepens. \chref{methods} builds
+the arms, and \chref{results} reports what the data show.

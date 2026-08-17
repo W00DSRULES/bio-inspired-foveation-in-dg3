@@ -1,6 +1,6 @@
 # Bio-inspired foveation in DeepGaze III
 
-Bachelor's thesis, Imer Itez, Goethe University Frankfurt.
+Bachelor's thesis, Imer Itez, Goethe University Frankfurt. The thesis is [`thesis-tex/main.pdf`](thesis-tex/main.pdf); its LaTeX source is in [`thesis-tex/`](thesis-tex/).
 
 [DeepGaze III](https://github.com/matthias-k/DeepGaze) (Kümmerer, Bethge & Wallis, 2022) predicts where a person looks next in an image. It sees the whole image at one resolution. A human eye does not: only a small region around the current gaze is sharp, and resolution falls off with distance from it. This thesis puts that constraint into the model's input and measures what it changes.
 
@@ -16,7 +16,7 @@ Bachelor's thesis, Imer Itez, Goethe University Frankfurt.
 
 Every metric is per fixation on the held-out folds: log-likelihood, information gain over the centerbias (IG, bits), NSS and AUC. The primary contrast is sharp control vs gaze-contingent @ 40, reported as a fold-paired difference with two standard errors. The scoring protocol is the one of the DeepGaze III paper (the central starting fixation is kept as history and every free fixation is scored, 104,171 fixations).
 
-**Result.** On the test folds the gaze-contingent @ 40 arm scores $1.5781$ bits IG against $1.5742$ for the sharp control, a fold-paired difference of $+0.0039 \pm 0.0032$ bits per fixation. Stronger blur costs: $-0.0059 \pm 0.0053$ at 20 and $-0.0365 \pm 0.0083$ at 10 cycles per degree. The full table is [`results/foveation_mit1003_initial/results_tables.tex`](results/foveation_mit1003_initial/results_tables.tex), generated from [`results/foveation_mit1003_initial/test/table.json`](results/foveation_mit1003_initial/test/table.json); the pretrained read-out before any fine-tuning, scored the same way over the whole dataset, is [`results/foveation_mit1003_initial/pretrained_epoch0/baseline.json`](results/foveation_mit1003_initial/pretrained_epoch0/baseline.json). The thesis (LaTeX source in `thesis-tex/`, PDF `thesis-tex/main.pdf`) reads and interprets these numbers.
+**Result.** On the test folds the gaze-contingent @ 40 arm scores $1.5781$ bits IG against $1.5742$ for the sharp control, a fold-paired difference of $+0.0039 \pm 0.0032$ bits per fixation. Stronger blur costs: $-0.0059 \pm 0.0053$ at 20 and $-0.0365 \pm 0.0083$ at 10 cycles per degree. The full table is [`results/foveation_mit1003_initial/results_tables.tex`](results/foveation_mit1003_initial/results_tables.tex), generated from [`results/foveation_mit1003_initial/test/table.json`](results/foveation_mit1003_initial/test/table.json); the pretrained read-out before any fine-tuning, scored the same way over the whole dataset, is [`results/foveation_mit1003_initial/pretrained_epoch0/baseline.json`](results/foveation_mit1003_initial/pretrained_epoch0/baseline.json). The thesis reads and interprets these numbers.
 
 ## Setup
 
@@ -41,7 +41,7 @@ scripts/slurm/        SLURM templates for training, evaluation and the test suit
 tests/                pytest suite; `-m "not heavy"` is the laptop-safe subset
 notebooks/            interactive companions and figure reproductions (README inside)
 results/              committed artefacts: tables (JSON + Markdown), figures, the CV split, the centerbias
-thesis-tex/           LaTeX source of the thesis; figures are read from results/
+thesis-tex/           LaTeX source of the thesis and the built PDF; figures are read from results/
 ```
 
 The library modules that matter most: `foveate_input.py` (the Geisler–Perry foveation), `instrument.py` (log-density forward pass, scanpath sampling, checkpoint bundles), `evaluate.py` (the distribution-level evaluator every table comes from), `foveated_train.py` (read-out fine-tuning), `cv_split.py` (the 10-fold image split in `results/cv_splits/`).

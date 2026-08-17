@@ -1,0 +1,39 @@
+% =============================================================================
+%   macros.tex — thesis-wide commands and notation
+% =============================================================================
+
+% --- Project shorthands -------------------------------------------------
+\newcommand{\dg}{DG3\xspace}                                % DeepGaze III
+
+% --- Foveation notation ------------------------------------------------
+\newcommand{\fov}[1]{\ensuremath{#1_{\text{fov}}}}          % subscript-fov on anything
+\newcommand{\ppd}{\mathrm{ppd}}                            % pixels per degree (viewing geometry)
+
+% --- Vector / norm notation --------------------------------------------
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\fixxy}{(\mathrm{fix}_x, \mathrm{fix}_y)}       % current fixation point
+
+% --- Probability & information theory ----------------------------------
+\newcommand{\E}{\mathbb{E}}                                 % expectation
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\IG}{\mathrm{IG}}                               % Information Gain
+\newcommand{\LL}{\mathrm{LL}}                               % Log-Likelihood
+\newcommand{\NSS}{\mathrm{NSS}}
+\newcommand{\AUC}{\mathrm{AUC}}                             % Area Under the Curve
+
+% --- Cross-reference shortcuts (saves typing "Figure~\ref{...}") -------
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+\newcommand{\eqnref}[1]{Equation~(\ref{eq:#1})}
+\newcommand{\chref}[1]{Chapter~\ref{ch:#1}}
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\subsecref}[1]{Section~\ref{subsec:#1}}
+
+% --- Editorial markers (visible TODO / WIP / draft notes) --------------
+%   Usage: \todo{rewrite this paragraph}. Switched off for the final PDF;
+%   to see markers again while drafting, use the two commented definitions.
+\newcommand{\todo}[1]{}
+\newcommand{\note}[1]{}
+% \newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+% \newcommand{\note}[1]{\textcolor{blue}{\emph{[note: #1]}}}

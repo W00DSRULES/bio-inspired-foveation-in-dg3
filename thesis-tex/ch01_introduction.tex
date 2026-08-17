@@ -1,0 +1,78 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+Where people look in a scene is not random. Human subjects converge on faces, text and salient objects
+\citep{judd2009mit1003}. \emph{Where} attention lands is one question; in \emph{what order} it
+lands is another. Computational models of gaze predict these from the image, fitted to eye-tracking
+recordings of people looking at photographs. The earlier ones predicted only where, marking the regions
+of an image that draw fixations. DeepGaze~III \citep{kummerer2022deepgaze3}, \dg{} hereafter, addresses
+the second, the free-viewing \emph{scanpath} (\figref{intro-scanpath}). It predicts a probability density
+over the next fixation given the image and the recent history, and is evaluated at the level of that
+distribution rather than by matching individual sampled paths \citep{kummerer2021state}.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{foveation_mit1003/intro_scanpath_stim0091.png}
+  \caption[A human scanpath on an MIT1003 image]{One subject's fixations on an MIT1003 image \citep{judd2009mit1003}, numbered in viewing
+    order (the first in white): the boarding stairs, the airline name, then the people on the tarmac.}
+  \label{fig:intro-scanpath}
+\end{figure}
+
+Human vision is foveated, with acuity high only in a
+small region around the point of gaze, falling steeply with eccentricity. That is why the eyes move, bringing
+each region of interest onto the high-acuity fovea, with the choice of where to look next made from a
+low-resolution peripheral preview \citep{najemnik2005}. \dg{} instead reads the whole image at uniform
+resolution, so its predictions can be driven by fine detail a foveated viewer could not perceive.
+Whether \dg{} needs that detail is the question this thesis puts to it.
+
+This thesis narrows that gap at the input. A gaze-contingent, space-variant foveation after
+\citet{geislerperry1998} re-blurs the model's input around its current fixation before every forward pass
+--- sharp at gaze, blurred in the periphery --- so the model must predict each saccade
+from the degraded peripheral preview a human would have had. Two otherwise-identical models, one trained on sharp
+input and one on foveated input, are compared on MIT1003 \citep{judd2009mit1003} under image-stratified
+cross-validation, alongside a third arm that pins the same blur to the image centre and so
+separates gaze-contingency from the loss of peripheral resolution. At human acuity foveating the input costs
+nothing the experiment can measure. A cost appears once the falloff is pushed past human
+acuity, and grows as it steepens. Holding the same blur at the image centre costs more than letting it
+follow the gaze, and the gap grows as the periphery is degraded further.
+Alongside the foveation experiment, a per-image diagnostic shows
+that \dg{}'s fit varies more from image to image than any arm differs from another. Future work sets out a
+developmental question, whether a model's learning trajectory recapitulates the development of human
+gaze across age.
+
+\section{Applications}
+\label{sec:intro-applications}
+
+The mechanism and the measurement bear on problems outside the one asked here. \citet{geislerperry1998}
+built the falloff this thesis borrows in order to send video over a low-bandwidth link, keeping detail
+only where the eye was pointed. Gaze-tracked displays now do the same inside the renderer, drawing the
+periphery of a rendered frame at reduced cost \citep{guenter2012foveated, patney2016foveated} and
+steering what is left of the budget with a predicted saliency map \citep{gao2025foveatedpathtracing}. A
+scanpath model gives the next fixation as well as the current one, so the region about to be looked at
+can be drawn sharply before the eye reaches it. \chref{results} measures how the fit to human fixations
+changes as peripheral detail is discarded, which is that budget question in another form.
+
+The same problem arises with no human eye in the loop. A robot or a vehicle can carry a wide
+low-resolution camera for the field of view and a narrow high-resolution one that is steered, which
+\citet{wloka2018starfc} identify as the engineering counterpart of the retina's own arrangement.
+Something has to decide where the narrow camera points, and a model that predicts the next fixation is a
+candidate for that decision. \citet{zhang2020gazereview} survey the use of recorded human gaze in
+training agents that face this choice.
+
+Predicting where people look is already used in design. \citet{judd2009mit1003} name advertising among
+the applications of fixation prediction, and \citet{wloka2018starfc} note that commercial tools predict
+the first several fixations, the short window of attention an advertisement receives. A scanpath model
+states the order in which the parts of a layout are reached, so a designer can ask whether the brand is
+fixated early and not only whether it stands out. Interface layouts have been studied the same way
+\citep{jiang2024eyeformer}.
+
+\section{Structure of this thesis}
+
+\chref{background} reviews foveated vision and the lineage of saliency and scanpath models leading to
+\dg{}. \chref{methods} describes the host architecture and where the foveation attaches, then defines the
+evaluation framework, the multi-subject and per-image diagnostics, and the gaze-contingent foveation
+mechanism with its training protocol. \chref{results} reports the foveation experiment across the sharp
+control, the gaze-contingent arms and the fixed-centre arms, then the per-image
+analysis. \chref{discussion} interprets the finding and the per-image diagnostic, states the
+limitations (among them what the dataset does not record about its subjects) and sets out the work the
+mechanism enables. \chref{conclusion} states what the experiment settles and what it leaves open.

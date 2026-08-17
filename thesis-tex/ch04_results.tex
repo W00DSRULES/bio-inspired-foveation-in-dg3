@@ -1,0 +1,239 @@
+\chapter{Results}
+\label{ch:results}
+
+\secref{results-foveation} reports the gaze-contingent input-foveation experiment specified in
+\secref{foveation} and \secref{training}, the main experiment of this thesis, the seven arms of
+\tabref{arms} over ten cross-validation folds.
+\secref{results-per-image} reports the per-image diagnostic of \subsecref{difficulty-proxies}, which uses the
+pretrained \dg{} read-out and characterises where the model and the human population agree.
+The two sections use different read-outs on different splits, and \tabref{ledger} says which.
+
+\begin{table}[tbp]
+  \centering
+  \caption[Each measurement, its read-out and its split]{Every measurement in this chapter, with the read-out it uses
+    and the split it reads. The rows marked \emph{pretrained} take \dg{} as released and say nothing
+    about the trained arms. Across the ten models each image is the test image exactly once and the
+    validation image exactly once, so both splits span the dataset (\subsecref{cv-split}).}
+  \label{tab:ledger}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lccc}
+    \toprule
+    measurement & read-out & split & sample \\
+    \midrule
+    Baseline (\subsecref{results-baseline})            & pretrained            & whole dataset & $104{,}171$ fixations \\
+    Rate and reporting epoch (\subsecref{training-loop}) & each arm's own      & validation    & per fold \\
+    Unadapted penalty (\subsecref{results-arms})       & pretrained            & validation    & $4$ arms \\
+    Arm comparison (\subsecref{results-arms})          & each arm's, epoch $5$ & test          & $7$ arms \\
+    Diagnostics (\subsecref{results-diagnostics})      & each arm's, epoch $5$ & validation    & $3$ contrasts \\
+    Per-image variation (\secref{results-per-image})   & pretrained            & whole dataset & 1003 images \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Gaze-contingent input foveation}
+\label{sec:results-foveation}
+
+\subsection{Baseline}
+\label{subsec:results-baseline}
+
+Pretrained \dg{} on the full MIT1003 dataset under the protocol of \subsecref{mit1003}
+gains $1.562$~bits per fixation over the centerbias, pooled over fixations, which is
+$0.026$~bits above the $1.536 \pm 0.010$ of \citet{kummerer2022deepgaze3}, Table~2. Its AUC (\eqnref{auc}) is
+$0.9175 \pm 0.0018$ against their $0.916 \pm 0.001$, and its NSS
+$3.265 \pm 0.066$ against their $3.257 \pm 0.016$. Both are per-image means over the 1003
+stimuli.\footnote{Every $\pm$ in this chapter, and every error bar, is two standard errors of the mean
+(\subsecref{stats-plan}), over the ten folds for every arm difference and over the 1003 images for the
+pretrained baseline above. The values quoted from
+\citet{kummerer2022deepgaze3} carry their convention rather than this one, a standard
+deviation over eight repeated training runs.}
+Each bit doubles the probability the model puts on the pixel a subject fixated (\subsecref{metrics}), so
+$1.562$~bits is about $3$ times the probability the centerbias puts there.
+This baseline is the state every arm's read-out starts from. Part of its margin over the published
+figure is in-sample, since the released read-outs were fitted on these same images (\subsecref{arms});
+the comparator for every difference below is the trained sharp control.
+
+\subsection{The seven arms}
+\label{subsec:results-arms}
+
+Every arm fine-tunes its read-out on its own input, for the reason \secref{training} gives, and
+everything below comes from those trained read-outs on the held-out test split.
+
+Before that fine-tuning, the pretrained read-out on foveated input is level with the same read-out on
+sharp input at the human cutoff, scoring $-0.0003 \pm 0.0034$~bits against it on validation, and falls
+behind by $0.0224 \pm 0.0071$~bits at $f_{c0} = 20$ and by $0.0741 \pm 0.0123$ at $10$.
+Read-out training recovers about three quarters of the first penalty and half of the second, measured
+against the trained arms on the same split; at $f_{c0} = 40$ there was none to recover
+(\figref{training-curves}).
+
+\tabref{phase17-arms} reports the production run: all seven arms of \tabref{arms}, trained under the
+protocol of \subsecref{training-loop} and read at epoch five on the held-out test folds, which together
+cover the dataset once.
+Every arm sits about $1.5$~bits above the centerbias, so no read-out collapsed.
+The sharp control scores $1.5742$~bits, AUC $0.9180$ and NSS $3.309$, against the published $1.536 \pm 0.010$, $0.916 \pm 0.001$ and
+$3.257 \pm 0.016$ of \subsecref{results-baseline}.
+The fold-paired differences below agree with their validation counterparts within $0.0007$~bits on
+every arm, so choosing the reporting epoch on
+validation did not flatter that split.
+
+\input{../results/foveation_mit1003_initial/results_tables}
+
+At the human cutoff the gaze-contingent arm measures $\Delta \IG = +0.0039 \pm 0.0032$~bits,
+fold-paired. What this measures is a bound rather than a benefit. The two arms differ by at most
+$0.0071$~bits per fixation, two standard errors above the fold-paired mean, under $1\%$ of the
+$1.57$~bits the sharp control gains over the centerbias and a fifth of what foveation costs at
+$f_{c0} = 10$.
+The dose--response is monotone in strength, a lower cutoff meaning a stronger blur, from
+$-0.0059 \pm 0.0053$ at $f_{c0} = 20$ to $-0.0365 \pm 0.0083$ at $10$.
+The fixed-centre arms sit below the gaze-contingent ones at every cutoff (\tabref{phase17-arms}).
+\figref{fold-paired} draws all six arm-versus-control differences with their ten fold values shown
+individually.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{foveation_mit1003_initial/figs/fold_paired.png}
+  \caption[The six arm-versus-control differences by fold]{The six differences of \tabref{phase17-arms} at fold level. Each circle is one fold, that fold's
+    foveated read-out minus the control's over the images held out from both; the marker is the mean
+    of the ten.}
+  \label{fig:fold-paired}
+\end{figure}
+
+\subsection{The gaze-contingency contrast}
+\label{subsec:results-gaze-contingency}
+
+The gaze-contingent and the fixed-centre arm at each cutoff apply the identical blur profile, so the
+difference between them is what following the gaze contributes with the amount of blur held constant
+(\subsecref{arms}). That difference, the
+gaze-contingent arm's $\Delta \IG$ minus the fixed-centre arm's at the same cutoff, is the
+\emph{gaze-contingency term}.
+It grows as the periphery degrades, from $+0.0030 \pm 0.0027$~bits at $f_{c0} = 40$ to
+$+0.0057 \pm 0.0023$ at $20$ and $+0.0132 \pm 0.0040$ at $10$.
+
+All three differences at a cutoff are taken against the same control on the same fixations, so they add,
+the gaze-contingent arm's difference from the control being the fixed-centre arm's difference
+plus the gaze-contingency term. Read that way, at $f_{c0} = 10$ the blur costs $0.0497$~bits and
+following the gaze returns $0.0132$ of it, and at $20$ it costs $0.0115$ and returns $0.0057$.
+Degrading the periphery costs the model, and putting the sharp region where the eye is gives part of
+that cost back.
+
+The gaze-contingent arm sometimes delivers the saccade target inside its sharp disc, which would explain
+the term. That disc shrinks from $103.5$~px to nothing across the three cutoffs, and the
+gaze-contingency term is largest at $f_{c0} = 10$, where the disc has closed.
+Whatever produces the term requires the degradation to follow the gaze, and grows as the periphery is
+degraded further.
+
+\subsection{Where the cost falls}
+\label{subsec:results-diagnostics}
+
+The diagnostics of \subsecref{stats-plan} are computed on the validation split at the same reporting
+epoch, pairing the two arms of each contrast on identical fixations.
+The map-level diagnostics assign the strong-cutoff loss to spreading rather than to mislocation, the two
+arms' AUC at $f_{c0} = 10$ differing by $0.0017$.
+At $f_{c0} = 10$ the foveated arm's probability maps carry $0.043 \pm 0.012$~bits more entropy than the
+control's, while its predicted mode does not move measurably, against a mode-to-fixation distance of
+$191$~px in both arms.
+At $f_{c0} = 20$ the same pattern is a quarter the size ($+0.011$~bits), and at $f_{c0} = 40$ the
+difference is $-0.003$~bits.
+A map spread evenly over the pixels of an MIT1003 stimulus would carry about $19.5$~bits and the
+control's carry $17.0$, so $2.5$~bits is what concentrating the density achieves. Against that, none of these
+differences reaches $2\%$.
+
+The paired difference, which is a difference in log-likelihood as well
+(\subsecref{metrics}), is binned by saccade amplitude with the bin edges at the sharp radii of
+\eqnref{sharp-radius}, so every bin lies wholly inside or wholly outside an arm's sharp disc
+(\subsecref{sharp-radius}; \figref{stratified-amplitude}).
+At $f_{c0} = 40$ the profile shows no step at the $103.5$~px radius; pooling each fold's bins into the two
+regions gives $+0.002 \pm 0.007$~bits inside the disc and $+0.005 \pm 0.005$ outside, a difference of
+$+0.003 \pm 0.010$.
+At $f_{c0} = 10$, where no disc exists, the cost deepens with amplitude and reaches
+$-0.149 \pm 0.051$~bits beyond $500$~px.
+
+Stratifying by fixation index tests the expectation that a gaze-contingent cost should build along the
+scanpath (\figref{stratified-fixation-index}).
+At $f_{c0} = 10$ it does the opposite, with the cost deepest over the first two scored fixations and
+down to a fifth of that by the tail, while the two milder cutoffs show no comparable trend.
+Neither the saccade amplitude nor the control's own level accounts for it. Mean saccade amplitude
+\emph{rises} along the scanpath, from $149$ to $208$~px, and the cost at this cutoff deepens with
+amplitude, so amplitude on its own would predict a cost that grows where the measured one shrinks. The
+control's information gain falls from $1.80$ to about $1.45$~bits, so there is less to lose late in a
+scanpath than early, and the cost shrinks faster than that. Taken as a share of the control's level it
+runs from $2.9\%$ over the first scored fixation to $0.8\%$ over the ninth and later.
+The rest is consistent with the earliest predictions having the
+least history to condition on, so the image carries most of the prediction there, while later
+predictions draw on a longer history, which the foveation leaves untouched.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{foveation_mit1003_initial/figs/stratified_amplitude.png}
+  \caption[Information-gain difference by saccade amplitude]{The information-gain difference by
+    saccade amplitude on the validation split, with each point and bar taken across the ten folds. The
+    dashed lines are the sharp radii of \eqnref{sharp-radius}. The last bin is open-ended and holds
+    every saccade beyond $500$~px.}
+  \label{fig:stratified-amplitude}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{foveation_mit1003_initial/figs/stratified_fixation_index.png}
+  \caption[Information-gain difference by fixation index]{The information-gain difference by fixation index on the validation split, counting from the
+    first free fixation onwards (\subsecref{mit1003}); fixations nine and later are pooled.}
+  \label{fig:stratified-fixation-index}
+\end{figure}
+
+\section{Per-image variation in model fit}
+\label{sec:results-per-image}
+
+This section reports how \dg{}'s per-image performance varies with the fixation entropy of
+\subsecref{difficulty-proxies}.
+The model is the pretrained \dg{}, and the sample is every MIT1003 stimulus under the protocol of
+\subsecref{mit1003}.
+\figref{per-image-scatter} plots the entropy against each of the four metrics, with Pearson's
+product-moment $r$ and Spearman's rank $\rho$ over each panel.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{per_image_diagnostic_initial_1003/scatter.png}
+  \caption[Fixation entropy against model fit]{The fixation entropy of \eqnref{fix-entropy} against each of the four per-image metrics, one
+    point per stimulus with a least-squares line, for the pretrained \dg{}; $r$ is Pearson's and
+    $\rho$ Spearman's.}
+  \label{fig:per-image-scatter}
+\end{figure}
+
+Fixation entropy runs against every metric, the direction \subsecref{difficulty-proxies} anticipates,
+and most strongly against the log-likelihood.
+Part of this is a property of the metric rather than of the model.
+A likelihood rewards a concentrated density, so when the fifteen subjects looked at the same few places
+any model that puts its mass there scores well, and when they looked everywhere none can.
+The correlation therefore tracks how hard an image is to score on as much as how well \dg{} does on it.
+
+Per-fixation information gain over the 1003 stimuli ranges from $-0.13$ to $3.96$~bits and AUC from $0.77$ to $0.98$.
+\figref{extremes-high} shows the three highest stimuli by information gain and \figref{extremes-low}
+the three lowest, with each stimulus's IG, NSS and AUC in the caption.
+At the high end a region away from the image centre holds three-quarters of the subjects.
+Stimulus $750$ is the one image where \dg{} scores below the centerbias.
+The flower the subjects fixated sits at the image centre, where the centerbias already puts its mass,
+so the prior that \dg{} is measured against is at its strongest there.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{consensus_panels/consensus_stim0128.png}\\[3pt]
+  \includegraphics[width=\linewidth]{consensus_panels/consensus_stim0704.png}\\[3pt]
+  \includegraphics[width=\linewidth]{consensus_panels/consensus_stim0528.png}
+  \caption[The three highest stimuli by information gain]{The three stimuli with the highest per-fixation
+    information gain, top to bottom: $128$ ($3.96$~bits, NSS $3.4$, AUC $0.931$), $704$ ($3.77$~bits,
+    $5.7$, $0.968$) and $528$ ($3.64$~bits, $5.0$, $0.952$). In each row, left to right: every subject's
+    scanpath on that stimulus; the consensus regions (Appendix~\ref{app:consensus}); \dg{}'s
+    probability map given a single fixation at the image centre.}
+  \label{fig:extremes-high}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{consensus_panels/consensus_stim0750.png}\\[3pt]
+  \includegraphics[width=\linewidth]{consensus_panels/consensus_stim0639.png}\\[3pt]
+  \includegraphics[width=\linewidth]{consensus_panels/consensus_stim0489.png}
+  \caption[The three lowest stimuli by information gain]{The three stimuli with the lowest per-fixation
+    information gain, top to bottom: $750$ ($-0.13$~bits, NSS $2.6$, AUC $0.879$), $639$ ($0.23$~bits,
+    $1.7$, $0.849$) and $489$ ($0.23$~bits, $1.8$, $0.846$). Panels as in \figref{extremes-high}.}
+  \label{fig:extremes-low}
+\end{figure}

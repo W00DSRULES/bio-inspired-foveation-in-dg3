@@ -1,0 +1,753 @@
+% =============================================================================
+%   bibliography.bib — seeded with every reference cited in the project README.
+%   Add new entries below; keep them sorted by author surname.
+% =============================================================================
+
+@inproceedings{harel2006gbvs,
+  author    = {Harel, Jonathan and Koch, Christof and Perona, Pietro},
+  title     = {Graph-Based Visual Saliency},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {19},
+  pages     = {545--552},
+  year      = {2006},
+  doi       = {10.7551/mitpress/7503.003.0073},
+}
+
+
+@article{itti1998saliency,
+  author    = {Itti, Laurent and Koch, Christof and Niebur, Ernst},
+  title     = {A Model of Saliency-Based Visual Attention for Rapid Scene
+               Analysis},
+  journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume    = {20},
+  number    = {11},
+  pages     = {1254--1259},
+  year      = {1998},
+  doi       = {10.1109/34.730558},
+}
+
+@inproceedings{judd2009mit1003,
+  author    = {Judd, Tilke and Ehinger, Krista and Durand, Fr{\'e}do and
+               Torralba, Antonio},
+  title     = {Learning to Predict Where Humans Look},
+  booktitle = {IEEE International Conference on Computer Vision (ICCV)},
+  pages     = {2106--2113},
+  year      = {2009},
+  doi       = {10.1109/ICCV.2009.5459462},
+}
+
+@article{kummerer2022deepgaze3,
+  author    = {K{\"u}mmerer, Matthias and Bethge, Matthias and Wallis,
+               Thomas S. A.},
+  title     = {{DeepGaze III}: Modeling Free-Viewing Human Scanpaths with Deep
+               Learning},
+  journal   = {Journal of Vision},
+  volume    = {22},
+  number    = {5},
+  pages     = {7},
+  year      = {2022},
+  doi       = {10.1167/jov.22.5.7},
+}
+
+@article{kummerer2021state,
+  author    = {K{\"u}mmerer, Matthias and Bethge, Matthias},
+  title     = {State-of-the-Art in Human Scanpath Prediction},
+  journal   = {arXiv preprint arXiv:2102.12239},
+  year      = {2021},
+}
+
+% =============================================================================
+%   DeepGaze model family
+% =============================================================================
+
+@inproceedings{kummerer2015deepgaze1,
+  author        = {K{\"u}mmerer, Matthias and Theis, Lucas and Bethge, Matthias},
+  title         = {Deep Gaze I: Boosting Saliency Prediction with Feature Maps
+                   Trained on {ImageNet}},
+  booktitle     = {International Conference on Learning Representations (ICLR)
+                   Workshop},
+  year          = {2015},
+  eprint        = {1411.1045},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+}
+
+@article{kummerer2016deepgaze2,
+  author        = {K{\"u}mmerer, Matthias and Wallis, Thomas S. A. and Bethge,
+                   Matthias},
+  title         = {{DeepGaze II}: Reading Fixations from Deep Features Trained on
+                   Object Recognition},
+  journal       = {arXiv preprint arXiv:1610.01563},
+  year          = {2016},
+  eprint        = {1610.01563},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+}
+
+@inproceedings{linardos2021deepgaze2e,
+  author        = {Linardos, Akis and K{\"u}mmerer, Matthias and Press, Ori and
+                   Bethge, Matthias},
+  title         = {{DeepGaze IIE}: Calibrated Prediction in and Out-of-Domain for
+                   State-of-the-Art Saliency Modeling},
+  booktitle     = {IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages         = {12899--12908},
+  year          = {2021},
+  doi           = {10.1109/ICCV48922.2021.01268},
+  note          = {Preprint: arXiv:2105.12441},
+}
+
+% =============================================================================
+%   Evaluation methodology — information-theoretic framework
+% =============================================================================
+
+@article{kummerer2015information,
+  author  = {K{\"u}mmerer, Matthias and Wallis, Thomas S. A. and Bethge, Matthias},
+  title   = {Information-Theoretic Model Comparison Unifies Saliency Metrics},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {112},
+  number  = {52},
+  pages   = {16054--16059},
+  year    = {2015},
+  doi     = {10.1073/pnas.1510393112},
+}
+
+@inproceedings{kummerer2018benchmarking,
+  author        = {K{\"u}mmerer, Matthias and Wallis, Thomas S. A. and Bethge,
+                   Matthias},
+  title         = {Saliency Benchmarking Made Easy: Separating Models, Maps and
+                   Metrics},
+  booktitle     = {Computer Vision -- ECCV 2018},
+  series        = {Lecture Notes in Computer Science},
+  volume        = {11220},
+  pages         = {798--814},
+  year          = {2018},
+  publisher     = {Springer},
+  doi           = {10.1007/978-3-030-01270-0\_47},
+  note          = {Preprint: arXiv:1704.08615},
+}
+
+% =============================================================================
+%   Evaluation methodology — saliency metrics and benchmarks
+% =============================================================================
+
+@article{peters2005nss,
+  author  = {Peters, Robert J. and Iyer, Asha and Itti, Laurent and Koch,
+             Christof},
+  title   = {Components of Bottom-Up Gaze Allocation in Natural Images},
+  journal = {Vision Research},
+  volume  = {45},
+  number  = {18},
+  pages   = {2397--2416},
+  year    = {2005},
+  doi     = {10.1016/j.visres.2005.03.019},
+}
+
+@article{cristino2010scanmatch,
+  author  = {Cristino, Filipe and Math{\^o}t, Sebastiaan and Theeuwes, Jan and
+             Gilchrist, Iain D.},
+  title   = {{ScanMatch}: A Novel Method for Comparing Fixation Sequences},
+  journal = {Behavior Research Methods},
+  volume  = {42},
+  number  = {3},
+  pages   = {692--700},
+  year    = {2010},
+  doi     = {10.3758/BRM.42.3.692},
+}
+
+@inproceedings{yang2020predicting,
+  author    = {Yang, Zhibo and Huang, Lihan and Chen, Yupei and Wei, Zijun and
+               Ahn, Seoyoung and Zelinsky, Gregory and Samaras, Dimitris and
+               Hoai, Minh},
+  title     = {Predicting Goal-Directed Human Attention Using Inverse
+               Reinforcement Learning},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition
+               (CVPR)},
+  pages     = {190--199},
+  year      = {2020},
+  doi       = {10.1109/CVPR42600.2020.00027},
+}
+
+% =============================================================================
+%   Datasets
+% =============================================================================
+
+@article{bruce2009saliency,
+  author  = {Bruce, Neil D. B. and Tsotsos, John K.},
+  title   = {Saliency, Attention, and Visual Search: An Information Theoretic
+             Approach},
+  journal = {Journal of Vision},
+  volume  = {9},
+  number  = {3},
+  pages   = {5},
+  year    = {2009},
+  doi     = {10.1167/9.3.5},
+}
+
+% =============================================================================
+%   Foveated computation in machine learning and graphics
+% =============================================================================
+
+@article{guenter2012foveated,
+  author    = {Guenter, Brian and Finch, Mark and Drucker, Steven and Tan,
+               Desney and Snyder, John},
+  title     = {Foveated 3D Graphics},
+  journal   = {ACM Transactions on Graphics},
+  volume    = {31},
+  number    = {6},
+  eid       = {164},
+  year      = {2012},
+  publisher = {ACM},
+  doi       = {10.1145/2366145.2366183},
+  note      = {Proc. SIGGRAPH Asia 2012},
+}
+
+@article{patney2016foveated,
+  author    = {Patney, Anjul and Salvi, Marco and Kim, Joohwan and Kaplanyan,
+               Anton and Wyman, Chris and Benty, Nir and Luebke, David and
+               Lefohn, Aaron},
+  title     = {Towards Foveated Rendering for Gaze-Tracked Virtual Reality},
+  journal   = {ACM Transactions on Graphics},
+  volume    = {35},
+  number    = {6},
+  eid       = {179},
+  year      = {2016},
+  publisher = {ACM},
+  doi       = {10.1145/2980179.2980246},
+  note      = {Proc. SIGGRAPH Asia 2016},
+}
+
+
+
+@inproceedings{zhang2020gazereview,
+  author    = {Zhang, Ruohan and Saran, Akanksha and Liu, Bo and Zhu, Yifeng
+               and Guo, Sihang and Niekum, Scott and Ballard, Dana and
+               Hayhoe, Mary},
+  title     = {Human Gaze Assisted Artificial Intelligence: A Review},
+  booktitle = {Proceedings of the 29th International Joint Conference on
+               Artificial Intelligence (IJCAI)},
+  pages     = {4951--4958},
+  year      = {2020},
+  note      = {Survey Track},
+}
+
+
+
+
+% =============================================================================
+%   Attention theory and saliency-model lineage
+% =============================================================================
+
+@article{koch1985shifts,
+  author  = {Koch, Christof and Ullman, Shimon},
+  title   = {Shifts in Selective Visual Attention: Towards the Underlying Neural
+             Circuitry},
+  journal = {Human Neurobiology},
+  volume  = {4},
+  number  = {4},
+  pages   = {219--227},
+  year    = {1985},
+}
+
+@article{treisman1980feature,
+  author  = {Treisman, Anne M. and Gelade, Garry},
+  title   = {A Feature-Integration Theory of Attention},
+  journal = {Cognitive Psychology},
+  volume  = {12},
+  number  = {1},
+  pages   = {97--136},
+  year    = {1980},
+  doi     = {10.1016/0010-0285(80)90005-5},
+}
+
+@article{wolfe1989guided,
+  author  = {Wolfe, Jeremy M. and Cave, Kyle R. and Franzel, Susan L.},
+  title   = {Guided Search: An Alternative to the Feature Integration Model for
+             Visual Search},
+  journal = {Journal of Experimental Psychology: Human Perception and Performance},
+  volume  = {15},
+  number  = {3},
+  pages   = {419--433},
+  year    = {1989},
+  doi     = {10.1037/0096-1523.15.3.419},
+}
+
+@article{zhang2008sun,
+  author  = {Zhang, Lingyun and Tong, Matthew H. and Marks, Tim K. and Shan,
+             Honghao and Cottrell, Garrison W.},
+  title   = {{SUN}: A Bayesian Framework for Saliency Using Natural Statistics},
+  journal = {Journal of Vision},
+  volume  = {8},
+  number  = {7},
+  pages   = {32},
+  year    = {2008},
+  doi     = {10.1167/8.7.32},
+}
+
+
+@article{lemeur2015saccadic,
+  author  = {Le Meur, Olivier and Liu, Zhi},
+  title   = {Saccadic Model of Eye Movements for Free-Viewing Condition},
+  journal = {Vision Research},
+  volume  = {116},
+  pages   = {152--164},
+  year    = {2015},
+  doi     = {10.1016/j.visres.2014.12.026},
+}
+
+@inproceedings{assens2017saltinet,
+  author    = {Assens, Marc and Gir{\'o}-i-Nieto, Xavier and McGuinness, Kevin
+               and O'Connor, Noel E.},
+  title     = {{SaltiNet}: Scan-Path Prediction on 360 Degree Images Using
+               Saliency Volumes},
+  booktitle = {IEEE International Conference on Computer Vision Workshops (ICCVW)},
+  pages     = {2331--2338},
+  year      = {2017},
+  doi       = {10.1109/ICCVW.2017.275},
+}
+
+
+
+% --- SceneWalk dynamical-model lineage (Potsdam group) ---
+% engbert2015scenewalk + schuett2017likelihood: the two core SceneWalk papers,
+% both confirmed via the reference list of schwetlick_ccn.pdf.
+@article{engbert2015scenewalk,
+  author  = {Engbert, Ralf and Trukenbrod, Hans A. and Barthelm{\'e}, Simon and
+             Wichmann, Felix A.},
+  title   = {Spatial Statistics and Attentional Dynamics in Scene Viewing},
+  journal = {Journal of Vision},
+  volume  = {15},
+  number  = {1},
+  pages   = {14},
+  year    = {2015},
+  doi     = {10.1167/15.1.14},
+}
+
+@article{schuett2017likelihood,
+  author  = {Sch{\"u}tt, Heiko H. and Rothkegel, Lars O. M. and Trukenbrod,
+             Hans A. and Reich, Sebastian and Wichmann, Felix A. and Engbert,
+             Ralf},
+  title   = {Likelihood-Based Parameter Estimation and Comparison of Dynamical
+             Cognitive Models},
+  journal = {Psychological Review},
+  volume  = {124},
+  number  = {4},
+  pages   = {505--524},
+  year    = {2017},
+  doi     = {10.1037/rev0000068},
+}
+
+@inproceedings{schwetlick2019ccn,
+  author    = {Schwetlick, Lisa and Rothkegel, Lars O. M. and Engbert, Ralf},
+  title     = {Adding Neurally-Inspired Mechanisms to the {SceneWalk} Model
+               Improves Scan Path Predictions for Natural Images},
+  booktitle = {Conference on Cognitive Computational Neuroscience (CCN)},
+  year      = {2019},
+  doi       = {10.32470/CCN.2019.1206-0},
+}
+
+@phdthesis{schwetlick2023diss,
+  author = {Schwetlick, Lisa},
+  title  = {Data Assimilation for Neurocognitive Models of Eye Movement},
+  school = {University of Potsdam},
+  year   = {2023},
+  doi    = {10.25932/publishup-59828},
+}
+
+% =============================================================================
+%   Visual neuroscience — foveation and eccentricity
+% =============================================================================
+
+
+
+@inproceedings{kummerer2019ccn,
+  author    = {K{\"u}mmerer, Matthias and Wallis, Thomas S. A. and Bethge, Matthias},
+  title     = {{DeepGaze III}: Using Deep Learning to Probe Interactions Between
+               Scene Content and Scanpath History in Fixation Selection},
+  booktitle = {Conference on Cognitive Computational Neuroscience (CCN)},
+  pages     = {542--545},
+  year      = {2019},
+  doi       = {10.32470/CCN.2019.1235-0},
+}
+
+@inproceedings{wloka2018starfc,
+  author    = {Wloka, Calden and Kotseruba, Iuliia and Tsotsos, John K.},
+  title     = {Active Fixation Control to Predict Saccade Sequences},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {3184--3193},
+  year      = {2018},
+  doi       = {10.1109/CVPR.2018.00336},
+  note      = {STAR-FC. Earlier version: arXiv:1711.10959,
+               ``Saccade Sequence Prediction: Beyond Static Saliency Maps''.},
+}
+
+@article{daniel1961representation,
+  author  = {Daniel, P. M. and Whitteridge, D.},
+  title   = {The Representation of the Visual Field on the Cerebral Cortex in
+             Monkeys},
+  journal = {The Journal of Physiology},
+  volume  = {159},
+  number  = {2},
+  pages   = {203--221},
+  year    = {1961},
+  doi     = {10.1113/jphysiol.1961.sp006803},
+}
+
+@article{curcio1990photoreceptor,
+  author  = {Curcio, Christine A. and Sloan, Kenneth R. and Kalina, Robert E.
+             and Hendrickson, Anita E.},
+  title   = {Human Photoreceptor Topography},
+  journal = {The Journal of Comparative Neurology},
+  volume  = {292},
+  number  = {4},
+  pages   = {497--523},
+  year    = {1990},
+  doi     = {10.1002/cne.902920402},
+}
+
+@article{strasburger2011peripheral,
+  author  = {Strasburger, Hans and Rentschler, Ingo and J{\"u}ttner, Martin},
+  title   = {Peripheral Vision and Pattern Recognition: A Review},
+  journal = {Journal of Vision},
+  volume  = {11},
+  number  = {5},
+  pages   = {13},
+  year    = {2011},
+  doi     = {10.1167/11.5.13},
+}
+
+
+@article{fecteau2006salience,
+  author  = {Fecteau, Jillian H. and Munoz, Douglas P.},
+  title   = {Salience, Relevance, and Firing: A Priority Map for Target
+             Selection},
+  journal = {Trends in Cognitive Sciences},
+  volume  = {10},
+  number  = {8},
+  pages   = {382--390},
+  year    = {2006},
+  doi     = {10.1016/j.tics.2006.06.011},
+}
+
+@article{zelinsky2015priority,
+  author  = {Zelinsky, Gregory J. and Bisley, James W.},
+  title   = {The What, Where, and Why of Priority Maps and Their Interactions
+             with Visual Working Memory},
+  journal = {Annals of the New York Academy of Sciences},
+  volume  = {1339},
+  pages   = {154--164},
+  year    = {2015},
+  doi     = {10.1111/nyas.12606},
+}
+
+@article{tatler2007central,
+  author  = {Tatler, Benjamin W.},
+  title   = {The Central Fixation Bias in Scene Viewing: Selecting an Optimal
+             Viewing Position Independently of Motor Biases and Image Feature
+             Distributions},
+  journal = {Journal of Vision},
+  volume  = {7},
+  number  = {14},
+  pages   = {4},
+  year    = {2007},
+  doi     = {10.1167/7.14.4},
+}
+
+@article{tatler2009prominence,
+  author  = {Tatler, Benjamin W. and Vincent, Benjamin T.},
+  title   = {The Prominence of Behavioural Biases in Eye Guidance},
+  journal = {Visual Cognition},
+  volume  = {17},
+  number  = {6-7},
+  pages   = {1029--1054},
+  year    = {2009},
+  doi     = {10.1080/13506280902764539},
+}
+
+@article{henderson2003gaze,
+  author  = {Henderson, John M.},
+  title   = {Human Gaze Control During Real-World Scene Perception},
+  journal = {Trends in Cognitive Sciences},
+  volume  = {7},
+  number  = {11},
+  pages   = {498--504},
+  year    = {2003},
+  doi     = {10.1016/j.tics.2003.09.006},
+}
+
+@article{rayner1998eye,
+  author  = {Rayner, Keith},
+  title   = {Eye Movements in Reading and Information Processing: 20 Years of
+             Research},
+  journal = {Psychological Bulletin},
+  volume  = {124},
+  number  = {3},
+  pages   = {372--422},
+  year    = {1998},
+  doi     = {10.1037/0033-2909.124.3.372},
+}
+
+% --- Contemporary scanpath / saliency work (2023--2025) ------------------
+
+@inproceedings{mondal2023gazeformer,
+  author    = {Mondal, Sounak and Yang, Zhibo and Ahn, Seoyoung and
+               Samaras, Dimitris and Zelinsky, Gregory and Hoai, Minh},
+  title     = {{Gazeformer}: Scalable, Effective and Fast Prediction of
+               Goal-Directed Human Attention},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1441--1450},
+  year      = {2023},
+  doi       = {10.1109/CVPR52729.2023.00145},
+  note      = {Preprint: arXiv:2303.15274},
+}
+
+@inproceedings{yang2024hat,
+  author    = {Yang, Zhibo and Mondal, Sounak and Ahn, Seoyoung and Xue, Ruoyu
+               and Zelinsky, Gregory and Hoai, Minh and Samaras, Dimitris},
+  title     = {Unifying Top-Down and Bottom-Up Scanpath Prediction Using
+               Transformers},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1683--1693},
+  year      = {2024},
+  doi       = {10.1109/CVPR52733.2024.00166},
+  note      = {HAT (Human Attention Transformer). Preprint: arXiv:2303.09383},
+}
+
+@inproceedings{damelio2025tppgaze,
+  author    = {D'Amelio, Alessandro and Cartella, Giuseppe and Cuculo, Vittorio
+               and Lucchi, Manuele and Cornia, Marcella and Cucchiara, Rita and
+               Boccignone, Giuseppe},
+  title     = {{TPP-Gaze}: Modelling Gaze Dynamics in Space and Time with Neural
+               Temporal Point Processes},
+  booktitle = {IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages     = {8786--8795},
+  year      = {2025},
+  doi       = {10.1109/WACV61041.2025.00851},
+  note      = {Preprint: arXiv:2410.23409},
+}
+
+@inproceedings{cartella2025scandiff,
+  author    = {Cartella, Giuseppe and Cuculo, Vittorio and D'Amelio, Alessandro
+               and Cornia, Marcella and Boccignone, Giuseppe and Cucchiara, Rita},
+  title     = {Modeling Human Gaze Behavior with Diffusion Models for Unified
+               Scanpath Prediction},
+  booktitle = {IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {16206--16216},
+  year      = {2025},
+  doi       = {10.1109/ICCV51701.2025.01504},
+  note      = {ScanDiff. Preprint: arXiv:2507.23021},
+}
+
+@inproceedings{jiang2024eyeformer,
+  author    = {Jiang, Yue and Guo, Zixin and Rezazadegan Tavakoli, Hamed and
+               Leiva, Luis A. and Oulasvirta, Antti},
+  title     = {{EyeFormer}: Predicting Personalized Scanpaths with
+               Transformer-Guided Reinforcement Learning},
+  booktitle = {37th Annual ACM Symposium on User Interface Software and
+               Technology (UIST)},
+  year      = {2024},
+  doi       = {10.1145/3654777.3676436},
+  note      = {Preprint: arXiv:2404.10163},
+}
+
+@article{gao2025foveatedpathtracing,
+  author  = {Gao, Yang and Li, Wencan and Liang, Shiyu and Hao, Aimin and
+             Tan, Xiaohui},
+  title   = {Saliency-Aware Foveated Path Tracing for Virtual Reality Rendering},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  volume  = {31},
+  number  = {5},
+  pages   = {2725--2735},
+  year    = {2025},
+  doi     = {10.1109/TVCG.2025.3549148},
+}
+
+
+% --- General deep-learning method milestones (architectural context) -----
+
+@inproceedings{vaswani2017attention,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit,
+               Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz
+               and Polosukhin, Illia},
+  title     = {Attention Is All You Need},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {30},
+  year      = {2017},
+  note      = {Preprint: arXiv:1706.03762},
+}
+
+@inproceedings{dosovitskiy2021vit,
+  author    = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander
+               and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas
+               and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg
+               and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
+  title     = {An Image Is Worth {16x16} Words: Transformers for Image
+               Recognition at Scale},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021},
+  note      = {Vision Transformer (ViT). Preprint: arXiv:2010.11929},
+}
+
+@inproceedings{ho2020ddpm,
+  author    = {Ho, Jonathan and Jain, Ajay and Abbeel, Pieter},
+  title     = {Denoising Diffusion Probabilistic Models},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {33},
+  pages     = {6840--6851},
+  year      = {2020},
+  note      = {Preprint: arXiv:2006.11239},
+}
+
+@inproceedings{krizhevsky2012alexnet,
+  author    = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E.},
+  title     = {{ImageNet} Classification with Deep Convolutional Neural Networks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {25},
+  year      = {2012},
+}
+
+% =============================================================================
+%   Developmental eye-movement / gaze literature
+%   DOIs verified against publisher / Crossref / PubMed.
+% =============================================================================
+
+@article{helo2014maturation,
+  author  = {Helo, Andrea and Pannasch, Sebastian and Sirri, Louah and R{\"a}m{\"a}, Pia},
+  title   = {The maturation of eye movement behavior: Scene viewing characteristics in children and adults},
+  journal = {Vision Research},
+  volume  = {103},
+  pages   = {83--91},
+  year    = {2014},
+  doi     = {10.1016/j.visres.2014.08.006},
+}
+
+@article{acik2010developmental,
+  author  = {A{\c{c}}{\i}k, Alper and Sarwary, Adjmal and Schultze-Kraft, Rafael and Onat, Selim and K{\"o}nig, Peter},
+  title   = {Developmental changes in natural viewing behavior: bottom-up and top-down differences between children, young adults and older adults},
+  journal = {Frontiers in Psychology},
+  volume  = {1},
+  pages   = {207},
+  year    = {2010},
+  doi     = {10.3389/fpsyg.2010.00207},
+}
+
+@article{robson1981,
+  author    = {Robson, J. G. and Graham, N.},
+  title     = {Probability summation and regional variation in contrast sensitivity across the visual field},
+  journal   = {Vision Research},
+  volume    = {21},
+  number    = {3},
+  pages     = {409--418},
+  year      = {1981},
+  doi       = {10.1016/0042-6989(81)90169-3},
+}
+
+@inproceedings{arnow1996,
+  author    = {Arnow, T. L. and Geisler, Wilson S.},
+  title     = {Visual detection following retinal damage: Predictions of an inhomogeneous retino-cortical model},
+  booktitle = {Human Vision and Electronic Imaging},
+  series    = {Proceedings of SPIE},
+  volume    = {2674},
+  pages     = {119--130},
+  year      = {1996},
+  publisher = {SPIE},
+  doi       = {10.1117/12.237500},
+}
+
+@article{banks1991,
+  author    = {Banks, Martin S. and Sekuler, Allison B. and Anderson, Stephen J.},
+  title     = {Peripheral spatial vision: limits imposed by optics, photoreceptors, and receptor pooling},
+  journal   = {Journal of the Optical Society of America A},
+  volume    = {8},
+  number    = {11},
+  pages     = {1775--1787},
+  year      = {1991},
+  doi       = {10.1364/JOSAA.8.001775},
+}
+
+@inproceedings{geislerperry1998,
+  author    = {Geisler, Wilson S. and Perry, Jeffrey S.},
+  title     = {A real-time foveated multiresolution system for low-bandwidth video communication},
+  booktitle = {Human Vision and Electronic Imaging III},
+  series    = {Proceedings of SPIE},
+  volume    = {3299},
+  pages     = {294--305},
+  year      = {1998},
+  publisher = {SPIE},
+  doi       = {10.1117/12.320120},
+}
+
+@article{najemnik2005,
+  author    = {Najemnik, Jiri and Geisler, Wilson S.},
+  title     = {Optimal eye movement strategies in visual search},
+  journal   = {Nature},
+  volume    = {434},
+  number    = {7031},
+  pages     = {387--391},
+  year      = {2005},
+  publisher = {Nature Publishing Group},
+  doi       = {10.1038/nature03390},
+}
+
+@inproceedings{hendrycks2019robustness,
+  author    = {Hendrycks, Dan and Dietterich, Thomas},
+  title     = {Benchmarking Neural Network Robustness to Common Corruptions and Perturbations},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019},
+}
+
+@article{dacosta2024retinal,
+  author    = {{da Costa}, Danny and Kornemann, Lukas and Goebel, Rainer and Senden, Mario},
+  title     = {Convolutional neural networks develop major organizational principles of early visual cortex when enhanced with retinal sampling},
+  journal   = {Scientific Reports},
+  volume    = {14},
+  year      = {2024},
+  doi       = {10.1038/s41598-024-59376-x},
+  publisher = {Nature Publishing Group},
+}
+
+@inproceedings{luzio2025semba,
+  author    = {Luzio, Jo\~{a}o and Bernardino, Alexandre and Moreno, Plinio},
+  title     = {Human Scanpath Prediction in Target-Present Visual Search with Semantic-Foveal Bayesian Attention},
+  booktitle = {IEEE International Conference on Development and Learning (ICDL)},
+  pages     = {1--8},
+  year      = {2025},
+  doi       = {10.1109/ICDL63968.2025.11204443},
+}
+
+% --- Observer age and individual differences (limitations passage) --------
+% Adult-lifespan gaze variation, between-observer differences, and
+% age-related peripheral-vision change. All DOIs verified against the
+% publisher record, Crossref, or PubMed.
+
+@software{deepgazepytorch,
+  author       = {K{\"u}mmerer, Matthias},
+  title        = {{DeepGaze}: {PyTorch} implementations of the {DeepGaze} models},
+  organization = {Bethge Lab, University of T{\"u}bingen},
+  url          = {https://github.com/matthias-k/DeepGaze},
+  version      = {1.2.1},
+  note         = {Commit \texttt{c87b106}, dated 2026-03-13; the pin this thesis builds against},
+  year         = {2026},
+}
+
+
+@article{watson2014formula,
+  author  = {Watson, Andrew B.},
+  title   = {A Formula for Human Retinal Ganglion Cell Receptive Field Density as a Function of
+             Visual Field Location},
+  journal = {Journal of Vision},
+  volume  = {14},
+  number  = {7},
+  pages   = {15},
+  year    = {2014},
+  doi     = {10.1167/14.7.15},
+}
+
+@article{rosenholtz2016peripheral,
+  author  = {Rosenholtz, Ruth},
+  title   = {Capabilities and Limitations of Peripheral Vision},
+  journal = {Annual Review of Vision Science},
+  volume  = {2},
+  pages   = {437--457},
+  year    = {2016},
+  doi     = {10.1146/annurev-vision-082114-035733},
+}
